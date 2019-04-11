@@ -1,0 +1,51 @@
+CREATE TABLE IF NOT EXISTS student (
+                          id serial NOT NULL REFERENCES public.user(id)  ON DELETE CASCADE
+                         ON UPDATE CASCADE,
+                          cardNo INT NOT NULL,
+                          group_id INT NOT NULL,
+                         PRIMARY KEY (id)
+                          );
+						  
+CREATE TABLE IF NOT EXISTS teacher (
+                          id serial NOT NULL REFERENCES public.user(id)  ON DELETE CASCADE
+                         ON UPDATE CASCADE,
+                    
+                         PRIMARY KEY (id)
+                          );
+						  
+CREATE TABLE IF NOT EXISTS role_right (
+                          id serial NOT NULL,
+                          role_id INT NOT NULL REFERENCES public.role(id)
+                            ON DELETE CASCADE
+                            ON UPDATE CASCADE,
+                          right_id INT NOT NULL REFERENCES public.right(id)
+                            ON DELETE CASCADE
+                            ON UPDATE CASCADE ,
+                          PRIMARY KEY (id)
+                          );
+						  
+						  
+CREATE TABLE IF NOT EXISTS user_role (
+                          id serial NOT NULL ,
+                          user_id INT NOT NULL REFERENCES public.user(id)
+                            ON DELETE CASCADE
+                            ON UPDATE CASCADE,
+                          role_id INT NOT NULL REFERENCES public.role(id)
+                            ON DELETE CASCADE
+                            ON UPDATE CASCADE,
+                          PRIMARY KEY (id)
+                          );					
+						
+CREATE TABLE IF NOT EXISTS user_course (
+                          id serial NOT NULL,
+                          user_id INT NOT NULL REFERENCES public.user (id)
+                            ON DELETE CASCADE
+                            ON UPDATE CASCADE,
+                          course_id INT NOT NULL REFERENCES public.course (id)
+                            ON DELETE CASCADE
+                            ON UPDATE CASCADE,
+                          grade INT NOT NULL,
+                          PRIMARY KEY (id)
+                         );						
+						
+						
