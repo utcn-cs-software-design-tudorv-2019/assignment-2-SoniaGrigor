@@ -1,13 +1,10 @@
 package view;
 
-import model.business.course.CourseService;
-import model.business.student.StudentService;
-import model.business.user.AuthenticationService;
-import model.business.user.UserService;
-
+import controller.StudentController;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,13 +14,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.business.course.CourseService;
+import model.business.student.StudentService;
+import model.business.user.AuthenticationService;
+import model.business.user.UserService;
 import model.persistence.entity.Course;
 import model.persistence.entity.Enrollment;
 import model.persistence.entity.Student;
-import model.persistence.entity.builder.StudentBuilder;
 import model.persistence.my_utility.Utility;
 
-import java.io.FileNotFoundException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,10 +54,7 @@ public class StudentView {
 
     private Button updateButton;
     private Button deleteButton;
-    private Button enrollButton;
     private Button viewCoursesButton;
-    private Button back;
-
 
     public StudentView(AuthenticationService authenticationService, CourseService courseService, StudentService studentService, UserService userService) {
         window = new Stage();
@@ -106,8 +102,26 @@ public class StudentView {
         cnpField = new TextField(student.getCNP());
         cnpField.setMinWidth(300);
         cardNoField = new TextField(Integer.toString(student.getCardNo()));
+        cardNoField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    cardNoField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
         cardNoField.setMinWidth(300);
-        groupField = new TextField(student.getGroup());
+        groupField = new TextField(Integer.toString(student.getGroup()));
+        groupField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    cardNoField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
         groupField.setMinWidth(300);
 
         courseListView = new ChoiceBox();
@@ -121,17 +135,14 @@ public class StudentView {
         bottomPane.setAlignment(Pos.CENTER);
         bottomPane.setPadding(new Insets(20, 20, 100, 20));
         updateButton = new Button("Update Information");
-        updateButton.setOnAction(e -> handleUpdateButtonEvent());
+
+        updateButton.setOnAction(e -> StudentController.handleUpdateButtonEvent(studentService,nameField.getText(), usernameField.getText(), passwordField.getText(), emailField.getText(),
+                cnpField.getText(),Integer.parseInt(cardNoField.getText()),Integer.parseInt(groupField.getText())  ));
         deleteButton = new Button("Delete Accout");
-        deleteButton.setOnAction(e -> handleDeleteButtonEvent());
-        enrollButton = new Button("Enroll Course");
-        enrollButton.setOnAction(e -> handleEnrollButtonEnvent(e));
+        deleteButton.setOnAction(e -> StudentController.handleDeleteButtonEvent( authenticationService,  studentService,  userService,  courseService));
         viewCoursesButton = new Button("View Courses");
         viewCoursesButton.setOnAction(e -> handleViewCoursesButtonEvent());
-        back = new Button("Back");
-        back.setOnAction(e -> handleBackButton());
-        //bottomPane.getChildren().addAll(updateButton, deleteButton, enrollButton, viewCoursesButton);
-        bottomPane.getChildren().addAll(updateButton, deleteButton, viewCoursesButton,back);
+        bottomPane.getChildren().addAll(updateButton, deleteButton, viewCoursesButton);
 
         layout.setTop(topPane);
         layout.setLeft(leftPane);
@@ -145,7 +156,7 @@ public class StudentView {
 
     private void handleViewCoursesButtonEvent() {
         try {
-            List<Enrollment> myCourseList = courseService.getMyCourses(idUser);
+            List<Enrollment> myCourseList = courseService.getMyCourses(16);
             ObservableList<Enrollment> data = FXCollections.observableList(myCourseList);
 
             TableView<Enrollment> table = new TableView<>();
@@ -177,13 +188,11 @@ public class StudentView {
             hbox.setSpacing(5);
             hbox.setPadding(new Insets(10, 0, 0, 10));
             hbox.getChildren().addAll(table);
-            back = new Button("Back");
-            back.setOnAction(e -> handleBackButton());
 
             VBox vBox = new VBox();
             vBox.setSpacing(5);
             vBox.setPadding(new Insets(10, 0, 0, 10));
-            vBox.getChildren().addAll(hbox, back);
+            vBox.getChildren().addAll(hbox);
 
             Scene scene = new Scene(vBox, 1200, 800);
 
@@ -199,48 +208,4 @@ public class StudentView {
 
     }
 
-    private void handleBackButton() {
-        window.close();    }
-
-    private void handleUpdateButtonEvent() {
-
-        String name = nameField.getText();
-        String username = usernameField.getText();
-        String password = passwordField.getText();
-        String email = emailField.getText();
-        String cnp = cnpField.getText();
-        int cardNo = Integer.parseInt(cardNoField.getText());
-        String group = groupField.getText();
-
-        if (password.equals("")) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle(PASSWORD_TITLE);
-            alert.setHeaderText(PASWORD_MESSAGE);
-            alert.showAndWait();
-        }
-        student = (Student) new StudentBuilder()
-                .setGroup(group)
-                .setCardNo(cardNo)
-                .setName(name)
-                .setUsername(username)
-                .setPassword(password)
-                .setEmail(email)
-                .setCNP(cnp)
-                .build();
-        studentService.update(student);
-
-    }
-
-    private void handleDeleteButtonEvent() {
-        studentService.removeById(Utility.getLoggedUser());
-        window.close();
-        try {
-            new LoginView(authenticationService, courseService, studentService, userService);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void handleEnrollButtonEnvent(ActionEvent actionEvent) {
-    }
 }

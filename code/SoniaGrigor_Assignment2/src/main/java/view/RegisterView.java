@@ -14,12 +14,8 @@ import model.business.course.CourseService;
 import model.business.student.StudentService;
 import model.business.user.AuthenticationService;
 import model.business.user.UserService;
-import model.persistence.entity.Course;
-import org.controlsfx.control.CheckComboBox;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static model.persistence.my_utility.DBConstants.Roles.ROLES;
@@ -40,8 +36,6 @@ public class RegisterView {
     private TextField cnpField;
     private ChoiceBox roleListView;
     private Button registerButton;
-    private List<Course> courseList;
-    private CheckComboBox<String> courseListView;
 
     public RegisterView(AuthenticationService authenticationService, CourseService courseService, StudentService studentService, UserService userService) throws FileNotFoundException {
 
@@ -94,25 +88,14 @@ public class RegisterView {
                         .map(String::toUpperCase)
                         .collect(Collectors.toList()));
 
-
-        courseList= new ArrayList<Course>();
-        courseList=courseService.findAll();
-        courseListView =  new CheckComboBox<String>();
-        courseListView.setMinWidth(300);
-        ObservableList<String> courseItems = FXCollections.observableArrayList(
-                courseList.stream()
-                        .map(Course::getName)
-                        .map(String::toUpperCase)
-                        .collect(Collectors.toList()));
-        courseListView.getItems().setAll(courseItems);
-
         rightPane.getChildren().addAll(nameField, usernameField, passwordField, emailField, cnpField, roleListView);
 
         VBox bottomPane = new VBox( 30);
         bottomPane.setAlignment(Pos.CENTER);
         bottomPane.setPadding(new Insets(20,20,100,20));
         registerButton = new Button("Register");
-        String role= roleListView.getSelectionModel().getSelectedItem().toString();
+        //String role= roleListView.getSelectionModel().getSelectedItem().toString();
+        String role= "BASIC";
         registerButton.setOnAction(e->RegisterController.handleRegisterButtonEvent(nameField.getText(),usernameField.getText(),passwordField.getText(), emailField.getText(), cnpField.getText(), role, authenticationService , courseService, studentService, userService));
         bottomPane.getChildren().addAll(registerButton);
 

@@ -2,6 +2,7 @@ package model.persistence.repository.student;
 
 import model.persistence.entity.Student;
 import model.persistence.entity.StudentPersonalInfo;
+import model.persistence.entity.User;
 
 import java.util.List;
 
@@ -23,9 +24,13 @@ public interface StudentRepository {
 
     boolean enrollCourse(int idUser, int idCourse);
 
-    Student get(int id);
+    User get(int id);
 
     void updateGrade(int idStudent, int idCourse, int grade);
 
-    boolean updateGroup(int idStudent, String group);
+    boolean updateGroup(int idStudent, int group);
+
+    Student getStudentInfo(int id);
+
+    Student findByUsernameAndPassword(String username, String encodePassword);
 }

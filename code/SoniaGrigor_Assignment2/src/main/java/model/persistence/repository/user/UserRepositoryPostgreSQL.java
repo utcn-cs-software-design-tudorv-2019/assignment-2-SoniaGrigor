@@ -1,26 +1,29 @@
 package model.persistence.repository.user;
 
+import model.persistence.entity.User;
+import model.persistence.repository.security.RightsRolesRepository;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import model.persistence.entity.User;
-import model.persistence.entity.validation.Notification;
-import model.persistence.repository.security.RightsRolesRepository;
+import org.hibernate.criterion.Restrictions;
 
-import javax.inject.Inject;
 import java.util.List;
 
 public class UserRepositoryPostgreSQL implements UserRepository {
 
     private final SessionFactory sessionFactory;
-    @Inject
     private RightsRolesRepository rightsRolesRepository;
     private Session session;
 
-    public UserRepositoryPostgreSQL(SessionFactory sessionFactory ) {
-        this.sessionFactory = sessionFactory;
-        this.session=sessionFactory.openSession();
+    public UserRepositoryPostgreSQL(SessionFactory sessionFactory){
+        this.sessionFactory=sessionFactory;
     }
 
+    public UserRepositoryPostgreSQL(SessionFactory sessionFactory, RightsRolesRepository rightsRolesRepository) {
+        this.sessionFactory = sessionFactory;
+        this.rightsRolesRepository = rightsRolesRepository;
+        this.session = sessionFactory.openSession();
+    }
 
     @Override
     public List<User> getAll() {
@@ -28,17 +31,28 @@ public class UserRepositoryPostgreSQL implements UserRepository {
     }
 
     @Override
-    public Notification<User> findByUsernameAndPassword(String username, String password) throws AuthenticationException {
-        return null;
+    public User findByUsernameAndPassword(String username, String password) throws IndexOutOfBoundsException {
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+        User user = (User) session.createCriteria(User.class).add(Restrictions.ilike("username", username)).add(Restrictions.ilike("password", password)).list().get(0);
+        session.getTransaction().commit();
+        session.close();
+        return user;
     }
 
     @Override
     public boolean update(User user) {
-        return false;
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.update(user);
+        session.getTransaction().commit();
+        session.close();
+        return true;
     }
 
     @Override
     public boolean save(User user) {
+        session = sessionFactory.openSession();
         session.beginTransaction();
         session.save(user);
         session.getTransaction().commit();
@@ -53,7 +67,13 @@ public class UserRepositoryPostgreSQL implements UserRepository {
 
     @Override
     public boolean deleteById(int id) {
-        return false;
+        User user = get(id);
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.delete(user);
+        session.getTransaction().commit();
+        session.close();
+        return true;
     }
 
     @Override
@@ -63,7 +83,18 @@ public class UserRepositoryPostgreSQL implements UserRepository {
 
     @Override
     public User get(int idUser) {
-        return null;
+        try {
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            Criteria criteria = session.createCriteria(User.class).add(Restrictions.eq("id", idUser));
+            User user = (User)criteria.list().get(0);
+            session.getTransaction().commit();
+            session.close();
+            return user;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

@@ -1,24 +1,23 @@
 package model.business.user;
 
 import model.business.security.RightsRolesService;
-import org.hibernate.SessionFactory;
 import model.persistence.entity.User;
 import model.persistence.entity.validation.Notification;
 import model.persistence.repository.user.AuthenticationException;
 import model.persistence.repository.user.UserRepository;
+import org.hibernate.SessionFactory;
 
-import javax.inject.Inject;
 import java.util.List;
 
 public class UserServicePostgreSQL implements UserService {
     private final SessionFactory sessionFactory;
-    @Inject
     private RightsRolesService rightsRolesService;
-    @Inject
     private UserRepository userRepository;
 
-    public UserServicePostgreSQL(SessionFactory sessionFactory) {
+    public UserServicePostgreSQL(SessionFactory sessionFactory,RightsRolesService rightsRolesService, UserRepository userRepository) {
         this.sessionFactory=sessionFactory;
+        this.rightsRolesService=rightsRolesService;
+        this.userRepository=userRepository;
     }
 
     @Override
@@ -33,7 +32,8 @@ public class UserServicePostgreSQL implements UserService {
 
     @Override
     public boolean update(User user) {
-        return false;
+
+        return userRepository.update(user);
     }
 
     @Override
@@ -48,7 +48,8 @@ public class UserServicePostgreSQL implements UserService {
 
     @Override
     public boolean removeById(int id) {
-        return false;
+
+        return userRepository.deleteById(id);
     }
 
     @Override

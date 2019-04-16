@@ -1,9 +1,6 @@
 package model.persistence.entity.builder;
 
-import model.persistence.entity.Role;
 import model.persistence.entity.User;
-
-import java.util.List;
 
 public class UserBuilder {
 
@@ -43,10 +40,15 @@ public class UserBuilder {
         return this;
     }
 
-    public UserBuilder setRoles(List<Role> roles) {
-        user.setRoles(roles);
-        return this;
-    }
+//    public UserBuilder setCardNo(int cardNo) {
+//        user.setCardNo(cardNo);
+//        return this;
+//    }
+//
+//    public UserBuilder setGroupId(String group) {
+//        user.setGroupId(group);
+//        return this;
+//    }
 
     public User build() {
         return user;

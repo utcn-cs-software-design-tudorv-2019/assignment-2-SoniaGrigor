@@ -1,10 +1,6 @@
 package model.persistence.entity.builder;
 
-import model.persistence.entity.Course;
-import model.persistence.entity.Role;
 import model.persistence.entity.Student;
-
-import java.util.List;
 
 public class StudentBuilder {
 
@@ -44,21 +40,12 @@ public class StudentBuilder {
         return this;
     }
 
-    public StudentBuilder setCourses(List<Course> courses) {
-        student.setCourses(courses);
-        return this;
-    }
-
-    public StudentBuilder setRoles(List<Role> roles) {
-        student.setRoles(roles);
-        return this;
-    }
     public StudentBuilder setCardNo(int cardNo){
         student.setCardNo(cardNo);
         return this;
     }
 
-    public StudentBuilder setGroup(String group){
+    public StudentBuilder setGroup(int group){
         student.setGroup(group);
         return this;
     }

@@ -1,25 +1,28 @@
 package model.business.student;
 
-import org.hibernate.SessionFactory;
 import model.persistence.entity.Student;
 import model.persistence.entity.StudentPersonalInfo;
+import model.persistence.my_utility.Utility;
 import model.persistence.repository.course.CourseRepository;
 import model.persistence.repository.security.RightsRolesRepository;
 import model.persistence.repository.student.StudentRepository;
+import org.hibernate.SessionFactory;
 
-import javax.inject.Inject;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static model.business.user.AuthenticationServicePostgreSQL.encodePassword;
+
 public class StudentServicePostgreSQL implements StudentService {
-    @Inject
     private StudentRepository studentRepository;
-    @Inject
     private RightsRolesRepository rightsRolesRepository;
-    @Inject
     private CourseRepository courseRepository;
 
-    public StudentServicePostgreSQL(SessionFactory connection) {
+    public StudentServicePostgreSQL(SessionFactory session,RightsRolesRepository rightsRolesRepository, CourseRepository courseRepository, StudentRepository studentRepository) {
+        this.rightsRolesRepository=rightsRolesRepository;
+        this.courseRepository=courseRepository;
+        this.studentRepository=studentRepository;
     }
 
     @Override
@@ -34,6 +37,7 @@ public class StudentServicePostgreSQL implements StudentService {
 
     @Override
     public boolean update(Student student) {
+
         return studentRepository.update(student);
     }
 
@@ -66,7 +70,7 @@ public class StudentServicePostgreSQL implements StudentService {
 
     @Override
     public Student findById(int idUser) {
-        return studentRepository.get(idUser);
+        return studentRepository.getStudentInfo(idUser);
     }
 
     @Override
@@ -75,8 +79,15 @@ public class StudentServicePostgreSQL implements StudentService {
     }
 
     @Override
-    public boolean updateGroup(int idStudent, String group) {
+    public boolean updateGroup(int idStudent, int group) {
         return studentRepository.updateGroup(idStudent,group);
     }
 
+    @Override
+    public boolean login(String username, String password) throws IOException, IndexOutOfBoundsException{
+        Student user = studentRepository.findByUsernameAndPassword(username, encodePassword(password));
+        Utility.setLoggedUser(user.getId());
+
+        return user != null;
+    }
 }

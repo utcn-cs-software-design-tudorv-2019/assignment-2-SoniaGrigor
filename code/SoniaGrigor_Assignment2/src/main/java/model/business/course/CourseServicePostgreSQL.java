@@ -2,7 +2,9 @@ package model.business.course;
 
 import model.persistence.entity.Course;
 import model.persistence.entity.Enrollment;
+import model.persistence.entity.User;
 import model.persistence.repository.course.CourseRepository;
+import model.persistence.repository.user.UserRepositoryPostgreSQL;
 import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
@@ -36,6 +38,9 @@ public class CourseServicePostgreSQL implements CourseService {
     @Override
     public List<Enrollment> getMyCourses(int id) {
         List<Enrollment> enrollmentList = null;
+        UserRepositoryPostgreSQL userRepository= new UserRepositoryPostgreSQL(sessionFactory);
+        User user = userRepository.get(id);
+        List<Course> allCourses= courseRepository.getAll();
         //something else
         return enrollmentList;
     }

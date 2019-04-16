@@ -1,24 +1,28 @@
 package model.persistence.repository.student;
 
-import org.hibernate.SessionFactory;
 import model.persistence.entity.Student;
 import model.persistence.entity.StudentPersonalInfo;
+import model.persistence.entity.User;
 import model.persistence.repository.course.CourseRepository;
 import model.persistence.repository.security.RightsRolesRepository;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 
-import javax.inject.Inject;
 import java.util.List;
 
 public class StudentRepositoryPostgreSQL implements StudentRepository {
 
     private final SessionFactory sessionFactory;
-    @Inject
     private RightsRolesRepository rightsRolesRepository;
-    @Inject
     private CourseRepository courseRepository;
+    private Session session;
 
-    public StudentRepositoryPostgreSQL(SessionFactory sessionFactory) {
+    public StudentRepositoryPostgreSQL(SessionFactory sessionFactory, RightsRolesRepository rightsRolesRepository, CourseRepository courseRepository) {
         this.sessionFactory = sessionFactory;
+        this.rightsRolesRepository = rightsRolesRepository;
+        this.courseRepository = courseRepository;
     }
 
 
@@ -34,12 +38,22 @@ public class StudentRepositoryPostgreSQL implements StudentRepository {
 
     @Override
     public boolean update(Student student) {
-        return false;
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.update(student);
+        session.getTransaction().commit();
+        session.close();
+        return true;
     }
 
     @Override
     public boolean save(Student user) {
-        return false;
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.save(user);
+        session.getTransaction().commit();
+        session.close();
+        return true;
     }
 
     @Override
@@ -49,12 +63,23 @@ public class StudentRepositoryPostgreSQL implements StudentRepository {
 
     @Override
     public boolean deleteById(int id) {
-        return false;
+        Student student = getStudentInfo(id);
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.delete(student);
+        session.getTransaction().commit();
+        session.close();
+        return true;
     }
 
     @Override
     public boolean delete(Student student) {
-        return false;
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.delete(student);
+        session.getTransaction().commit();
+        session.close();
+        return true;
     }
 
     @Override
@@ -63,8 +88,19 @@ public class StudentRepositoryPostgreSQL implements StudentRepository {
     }
 
     @Override
-    public Student get(int id) {
-        return null;
+    public User get(int id) {
+        try {
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            Criteria criteria = session.createCriteria(Student.class).add(Restrictions.eq("id", id));
+            User user = (User)criteria.list().get(0);
+            session.getTransaction().commit();
+            session.close();
+            return user;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -73,7 +109,36 @@ public class StudentRepositoryPostgreSQL implements StudentRepository {
     }
 
     @Override
-    public boolean updateGroup(int idStudent, String group) {
-        return false;
+    public boolean updateGroup(int idStudent, int group) {
+        Student student = getStudentInfo(idStudent);
+        student.setGroup(group);
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.update(student);
+        session.getTransaction().commit();
+        session.close();
+        return true;
+    }
+
+    @Override
+    public Student getStudentInfo(int id){
+
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria criteria = session.createCriteria(Student.class).add(Restrictions.eq("id", id));
+        Student student= (Student) criteria.list().get(0);
+        session.getTransaction().commit();
+        session.close();
+        return student;
+    }
+
+    @Override
+    public Student findByUsernameAndPassword(String username, String encodePassword) {
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+        Student student = (Student) session.createCriteria(Student.class).add(Restrictions.ilike("username", username)).add(Restrictions.ilike("password", encodePassword)).list().get(0);
+        session.getTransaction().commit();
+        session.close();
+        return student;
     }
 }

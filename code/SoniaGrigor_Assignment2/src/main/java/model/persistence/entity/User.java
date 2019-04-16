@@ -1,13 +1,15 @@
 package model.persistence.entity;
 
 import javax.persistence.*;
-import java.util.List;
+import java.io.Serializable;
 
 @Entity
-public class User {
+@Table(name = "user_uni")
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_uni")
     private int id;
 
     @Column
@@ -25,9 +27,14 @@ public class User {
     @Column
     private String CNP;
 
+//    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
+//    private Student student;
 
-    private List<Course> courses;
-    private List<Role> roles;
+//    @Column(name = "group_id")
+//    private String groupId;
+//
+//    @Column(name = "cardno")
+//    private int cardNo;
 
     public String getName() {
         return name;
@@ -77,21 +84,36 @@ public class User {
         this.password = password;
     }
 
-    public List<Course> getCourses() {
-        return courses;
-    }
+//    public String getGroupId() {
+//        return groupId;
+//    }
+//
+//    public void setGroupId(String groupId) {
+//        this.groupId = groupId;
+//    }
+//
+//    public int getCardNo() {
+//        return cardNo;
+//    }
+//
+//    public void setCardNo(int cardNo) {
+//        this.cardNo = cardNo;
+//    }
 
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
-    }
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//                ", username='" + username + '\'' +
+//                ", password='" + password + '\'' +
+//                ", email='" + email + '\'' +
+//                ", CNP='" + CNP + '\'' +
+//                ", groupId='" + groupId + '\'' +
+//                ", cardNo=" + cardNo +
+//                '}';
+//    }
 
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
 
     @Override
     public String toString() {
@@ -102,8 +124,6 @@ public class User {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", CNP='" + CNP + '\'' +
-                ", courses=" + courses +
-                ", roles=" + roles +
                 '}';
     }
 }

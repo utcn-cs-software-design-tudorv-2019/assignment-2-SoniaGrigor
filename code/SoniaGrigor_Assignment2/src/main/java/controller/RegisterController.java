@@ -5,18 +5,32 @@ import model.business.course.CourseService;
 import model.business.student.StudentService;
 import model.business.user.AuthenticationService;
 import model.business.user.UserService;
+import model.persistence.entity.Student;
+import model.persistence.entity.builder.StudentBuilder;
 import model.persistence.entity.validation.Notification;
 import view.LoginView;
 
 import java.io.FileNotFoundException;
 
+import static model.business.user.AuthenticationServicePostgreSQL.encodePassword;
 import static model.persistence.my_utility.ProjectConstants.*;
 
 public class RegisterController {
     public static void handleRegisterButtonEvent(String name, String username, String password, String email, String cnp, String role,
                                                  AuthenticationService authenticationService, CourseService courseService, StudentService studentService, UserService userService) {
-        Notification<Boolean> registerNotification = authenticationService.register(name, username, password, email, cnp );
-
+        Notification<Boolean> registerNotification = authenticationService.register(name, username, password, email, cnp , role);
+        if(role.equals("BASIC")) {
+            Student student= new StudentBuilder()
+                    .setName(name)
+                    .setUsername(username)
+                    .setPassword(encodePassword(password))
+                    .setEmail(email)
+                    .setCNP(cnp)
+                    .setCardNo(0)
+                    .setGroup(0)
+                    .build();
+            studentService.save(student);
+        }
         if (registerNotification != null) {
             if (registerNotification.hasErrors()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);

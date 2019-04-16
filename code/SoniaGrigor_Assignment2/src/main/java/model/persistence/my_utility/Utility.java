@@ -1,8 +1,6 @@
 package model.persistence.my_utility;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 import static model.persistence.my_utility.ProjectConstants.LOGGED_USER_FILE;
 
@@ -18,6 +16,13 @@ public class Utility {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    public static void setLoggedUser(int id) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(LOGGED_USER_FILE,false));
+        writer.write(String.valueOf(id));
+        writer.close();
+
     }
 
     public static int getUserRole(String username) {

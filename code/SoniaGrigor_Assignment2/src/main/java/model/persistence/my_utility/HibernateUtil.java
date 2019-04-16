@@ -44,14 +44,14 @@ public class HibernateUtil {
 
         rightsRolesRepository = new RightsRolesRepositoryPostgreSQL(connection);
         courseRepository=new CourseRepositoryPostgreSQL(connection);
-        studentRepository = new StudentRepositoryPostgreSQL(connection);
-        userRepository= new UserRepositoryPostgreSQL(connection);
+        studentRepository = new StudentRepositoryPostgreSQL(connection, rightsRolesRepository,courseRepository);
+        userRepository= new UserRepositoryPostgreSQL(connection,rightsRolesRepository);
 
         rightsRolesService = new RightsRolesServicePostgreSQL(connection);
-        userService = new UserServicePostgreSQL(connection);
+        userService = new UserServicePostgreSQL(connection,rightsRolesService,userRepository);
         courseService= new CourseServicePostgreSQL(connection, courseRepository);
-        studentService= new StudentServicePostgreSQL(connection);
-        authenticationService = new AuthenticationServicePostgreSQL();
+        studentService= new StudentServicePostgreSQL(connection,rightsRolesRepository,courseRepository,studentRepository);
+        authenticationService = new AuthenticationServicePostgreSQL(rightsRolesRepository,userRepository);
     }
 
     static {

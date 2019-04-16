@@ -1,14 +1,13 @@
 package model.persistence.repository.user;
 
 import model.persistence.entity.User;
-import model.persistence.entity.validation.Notification;
 
 import java.util.List;
 
 public interface UserRepository {
 
     List<User> getAll();
-    Notification<User> findByUsernameAndPassword(String username, String password) throws AuthenticationException;
+    User findByUsernameAndPassword(String username, String password);
     boolean update(User user);
     boolean save(User user);
     boolean deleteAll();
