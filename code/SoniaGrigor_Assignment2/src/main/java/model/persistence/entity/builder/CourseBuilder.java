@@ -7,14 +7,15 @@ import java.util.Date;
 public class CourseBuilder {
     private Course course;
 
-    public CourseBuilder(){
-        course=new Course();
+    public CourseBuilder() {
+        course = new Course();
     }
 
-    public CourseBuilder setId(int id){
+    public CourseBuilder setId(int id) {
         course.setId(id);
         return this;
     }
+
     public CourseBuilder setName(String name) {
         course.setName(name);
         return this;
@@ -25,17 +26,17 @@ public class CourseBuilder {
         return this;
     }
 
-    public CourseBuilder setExam(Date date){
+    public CourseBuilder setExam(Date date) {
         course.setExam(date);
         return this;
     }
 
-    public CourseBuilder setRoom(String room){
+    public CourseBuilder setRoom(String room) {
         course.setRoom(room);
         return this;
     }
 
-    public Course build(){
+    public Course build() {
         return course;
     }
 }

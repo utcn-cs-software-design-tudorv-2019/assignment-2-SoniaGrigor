@@ -5,11 +5,10 @@ import static model.persistence.my_utility.DBConstants.Schemas.TEST;
 
 public class DBConnectionFactory {
 
-    public JDBConnectionWrapper getConnectionWrapper(boolean test)
-    {
-        if(test){
+    public JDBConnectionWrapper getConnectionWrapper(boolean test) {
+        if (test) {
             return new JDBConnectionWrapper(TEST);
-        }else{
+        } else {
             return new JDBConnectionWrapper(PRODUCTION);
         }
     }

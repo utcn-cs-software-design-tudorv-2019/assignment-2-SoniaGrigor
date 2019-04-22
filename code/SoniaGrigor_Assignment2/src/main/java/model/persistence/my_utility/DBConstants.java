@@ -1,10 +1,22 @@
 package model.persistence.my_utility;
+
 import java.util.*;
 
 import static model.persistence.my_utility.DBConstants.Rights.*;
 import static model.persistence.my_utility.DBConstants.Roles.*;
 
 public class DBConstants {
+
+    public static Map<String, List<String>> getRolesRights() {
+        Map<String, List<String>> rolesRights = new HashMap<>();
+        for (String role : ROLES) {
+            rolesRights.put(role, new ArrayList<>());
+        }
+        rolesRights.get(ADMINISTRATOR).addAll(Arrays.asList(RIGHTS));
+        rolesRights.get(BASIC).addAll(Arrays.asList(CREATE_USER, DELETE_USER, UPDATE_USER, ENROLL_USER, ATTEND_EXAM));
+
+        return rolesRights;
+    }
 
     public static class Schemas {
         public static final String TEST = "test_university";
@@ -51,17 +63,6 @@ public class DBConstants {
         public static final String SET_EXAM = "set_exam";
 
         public static final String[] RIGHTS = new String[]{CREATE_USER, DELETE_USER, UPDATE_USER, CREATE_GRADE, SET_EXAM, ENROLL_USER, ATTEND_EXAM};
-    }
-
-    public static Map<String, List<String>> getRolesRights() {
-        Map<String, List<String>> rolesRights = new HashMap<>();
-        for (String role : ROLES) {
-            rolesRights.put(role, new ArrayList<>());
-        }
-        rolesRights.get(ADMINISTRATOR).addAll(Arrays.asList(RIGHTS));
-        rolesRights.get(BASIC).addAll(Arrays.asList(CREATE_USER, DELETE_USER, UPDATE_USER, ENROLL_USER, ATTEND_EXAM));
-
-        return rolesRights;
     }
 
 }

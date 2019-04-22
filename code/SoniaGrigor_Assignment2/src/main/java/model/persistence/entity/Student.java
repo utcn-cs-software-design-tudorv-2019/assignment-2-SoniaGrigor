@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "student")
-public class Student implements Serializable{
+public class Student implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class Student implements Serializable{
     @Column
     private String CNP;
 
-    @Column(name = "cardno" )
+    @Column(name = "cardno")
     private int cardNo;
 
     @Column(name = "group_id")
@@ -40,7 +40,7 @@ public class Student implements Serializable{
     public Student() {
     }
 
-    public Student(int cardNo, int group ) {
+    public Student(int cardNo, int group) {
         this.cardNo = cardNo;
         this.group = group;
     }

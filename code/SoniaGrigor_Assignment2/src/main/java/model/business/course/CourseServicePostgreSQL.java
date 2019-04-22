@@ -4,20 +4,21 @@ import model.persistence.entity.Course;
 import model.persistence.entity.Enrollment;
 import model.persistence.entity.User;
 import model.persistence.repository.course.CourseRepository;
-import model.persistence.repository.user.UserRepositoryPostgreSQL;
-import org.hibernate.SessionFactory;
+import model.persistence.repository.user.UserRepository;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CourseServicePostgreSQL implements CourseService {
-    private final SessionFactory sessionFactory;
 
+    @Inject
     private CourseRepository courseRepository;
 
-    public CourseServicePostgreSQL(SessionFactory sessionFactory, CourseRepository courseRepository) {
-        this.sessionFactory = sessionFactory;
-        this.courseRepository = courseRepository;
+    @Inject
+    private UserRepository userRepository;
+
+    public CourseServicePostgreSQL() {
     }
 
     @Override
@@ -38,9 +39,8 @@ public class CourseServicePostgreSQL implements CourseService {
     @Override
     public List<Enrollment> getMyCourses(int id) {
         List<Enrollment> enrollmentList = null;
-        UserRepositoryPostgreSQL userRepository= new UserRepositoryPostgreSQL(sessionFactory);
         User user = userRepository.get(id);
-        List<Course> allCourses= courseRepository.getAll();
+        List<Course> allCourses = courseRepository.getAll();
         //something else
         return enrollmentList;
     }
@@ -58,7 +58,7 @@ public class CourseServicePostgreSQL implements CourseService {
 
     @Override
     public int getIdByName(String courseName) {
-        int id=0;
+        int id = 0;
         //something else
         return id;
     }

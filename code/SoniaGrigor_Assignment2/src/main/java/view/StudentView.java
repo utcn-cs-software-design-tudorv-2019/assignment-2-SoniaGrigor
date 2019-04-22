@@ -1,5 +1,7 @@
 package view;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import controller.StudentController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,13 +18,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.business.course.CourseService;
 import model.business.student.StudentService;
-import model.business.user.AuthenticationService;
-import model.business.user.UserService;
 import model.persistence.entity.Course;
 import model.persistence.entity.Enrollment;
 import model.persistence.entity.Student;
+import model.persistence.my_utility.GuiceModule;
 import model.persistence.my_utility.Utility;
 
+import javax.inject.Inject;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +34,16 @@ import static model.persistence.my_utility.ProjectConstants.*;
 
 public class StudentView {
 
+    public static Injector injector = Guice.createInjector(new GuiceModule());
+
+    @Inject
+    private static StudentService studentService = injector.getInstance(StudentService.class);
+
+    @Inject
+    private static CourseService courseService = injector.getInstance(CourseService.class);
+    private static Student student;
     Stage window;
     Scene sceneMain;
-    private AuthenticationService authenticationService;
-    private StudentService studentService;
-    private CourseService courseService;
-    private UserService userService;
-
-    private static Student student;
     int idUser = Utility.getLoggedUser();
 
     private TextField nameField;
@@ -56,14 +60,9 @@ public class StudentView {
     private Button deleteButton;
     private Button viewCoursesButton;
 
-    public StudentView(AuthenticationService authenticationService, CourseService courseService, StudentService studentService, UserService userService) {
+    public StudentView() {
         window = new Stage();
         window.setTitle(STUDENT_TITLE);
-
-        this.authenticationService = authenticationService;
-        this.courseService = courseService;
-        this.studentService = studentService;
-        this.userService = userService;
 
         student = studentService.findById(idUser);
 
@@ -136,10 +135,10 @@ public class StudentView {
         bottomPane.setPadding(new Insets(20, 20, 100, 20));
         updateButton = new Button("Update Information");
 
-        updateButton.setOnAction(e -> StudentController.handleUpdateButtonEvent(studentService,nameField.getText(), usernameField.getText(), passwordField.getText(), emailField.getText(),
-                cnpField.getText(),Integer.parseInt(cardNoField.getText()),Integer.parseInt(groupField.getText())  ));
+        updateButton.setOnAction(e -> StudentController.handleUpdateButtonEvent(nameField.getText(), usernameField.getText(), passwordField.getText(), emailField.getText(),
+                cnpField.getText(), Integer.parseInt(cardNoField.getText()), Integer.parseInt(groupField.getText())));
         deleteButton = new Button("Delete Accout");
-        deleteButton.setOnAction(e -> StudentController.handleDeleteButtonEvent( authenticationService,  studentService,  userService,  courseService));
+        deleteButton.setOnAction(e -> StudentController.handleDeleteButtonEvent());
         viewCoursesButton = new Button("View Courses");
         viewCoursesButton.setOnAction(e -> handleViewCoursesButtonEvent());
         bottomPane.getChildren().addAll(updateButton, deleteButton, viewCoursesButton);

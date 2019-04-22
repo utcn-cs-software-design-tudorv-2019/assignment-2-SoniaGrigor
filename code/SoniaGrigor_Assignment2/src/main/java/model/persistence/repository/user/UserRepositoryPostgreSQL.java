@@ -1,28 +1,18 @@
 package model.persistence.repository.user;
 
 import model.persistence.entity.User;
-import model.persistence.repository.security.RightsRolesRepository;
+import model.persistence.my_utility.HibernateUtil;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
 public class UserRepositoryPostgreSQL implements UserRepository {
 
-    private final SessionFactory sessionFactory;
-    private RightsRolesRepository rightsRolesRepository;
     private Session session;
 
-    public UserRepositoryPostgreSQL(SessionFactory sessionFactory){
-        this.sessionFactory=sessionFactory;
-    }
-
-    public UserRepositoryPostgreSQL(SessionFactory sessionFactory, RightsRolesRepository rightsRolesRepository) {
-        this.sessionFactory = sessionFactory;
-        this.rightsRolesRepository = rightsRolesRepository;
-        this.session = sessionFactory.openSession();
+    public UserRepositoryPostgreSQL() {
     }
 
     @Override
@@ -32,7 +22,7 @@ public class UserRepositoryPostgreSQL implements UserRepository {
 
     @Override
     public User findByUsernameAndPassword(String username, String password) throws IndexOutOfBoundsException {
-        session = sessionFactory.openSession();
+        session = HibernateUtil.getSession();
         session.beginTransaction();
         User user = (User) session.createCriteria(User.class).add(Restrictions.ilike("username", username)).add(Restrictions.ilike("password", password)).list().get(0);
         session.getTransaction().commit();
@@ -42,7 +32,7 @@ public class UserRepositoryPostgreSQL implements UserRepository {
 
     @Override
     public boolean update(User user) {
-        session = sessionFactory.openSession();
+        session = HibernateUtil.getSession();
         session.beginTransaction();
         session.update(user);
         session.getTransaction().commit();
@@ -52,7 +42,7 @@ public class UserRepositoryPostgreSQL implements UserRepository {
 
     @Override
     public boolean save(User user) {
-        session = sessionFactory.openSession();
+        session = HibernateUtil.getSession();
         session.beginTransaction();
         session.save(user);
         session.getTransaction().commit();
@@ -68,7 +58,7 @@ public class UserRepositoryPostgreSQL implements UserRepository {
     @Override
     public boolean deleteById(int id) {
         User user = get(id);
-        session = sessionFactory.openSession();
+        session = HibernateUtil.getSession();
         session.beginTransaction();
         session.delete(user);
         session.getTransaction().commit();
@@ -84,10 +74,10 @@ public class UserRepositoryPostgreSQL implements UserRepository {
     @Override
     public User get(int idUser) {
         try {
-            session = sessionFactory.openSession();
+            session = HibernateUtil.getSession();
             session.beginTransaction();
             Criteria criteria = session.createCriteria(User.class).add(Restrictions.eq("id", idUser));
-            User user = (User)criteria.list().get(0);
+            User user = (User) criteria.list().get(0);
             session.getTransaction().commit();
             session.close();
             return user;

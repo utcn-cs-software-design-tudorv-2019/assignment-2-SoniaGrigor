@@ -1,18 +1,18 @@
 package model.business.security;
 
-import org.hibernate.SessionFactory;
 import model.persistence.entity.Right;
 import model.persistence.entity.Role;
 import model.persistence.entity.User;
+import model.persistence.my_utility.HibernateUtil;
+import org.hibernate.SessionFactory;
 
 import java.util.List;
 
 public class RightsRolesServicePostgreSQL implements RightsRolesService {
 
-    private final SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
-    public RightsRolesServicePostgreSQL(SessionFactory sessionFactory) {
-        this.sessionFactory=sessionFactory;
+    public RightsRolesServicePostgreSQL() {
     }
 
     @Override

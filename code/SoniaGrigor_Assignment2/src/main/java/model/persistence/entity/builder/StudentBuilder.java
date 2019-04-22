@@ -40,17 +40,17 @@ public class StudentBuilder {
         return this;
     }
 
-    public StudentBuilder setCardNo(int cardNo){
+    public StudentBuilder setCardNo(int cardNo) {
         student.setCardNo(cardNo);
         return this;
     }
 
-    public StudentBuilder setGroup(int group){
+    public StudentBuilder setGroup(int group) {
         student.setGroup(group);
         return this;
     }
 
-    public Student build(){
+    public Student build() {
         return student;
     }
 }

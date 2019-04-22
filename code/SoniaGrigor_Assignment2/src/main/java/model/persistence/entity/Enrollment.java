@@ -10,17 +10,18 @@ public class Enrollment {
     private int creditCourse;
     private Date dateExam;
     private String roomCourse;
+
     public Enrollment() {
     }
 
     public Enrollment(Course course, int grade) {
         this.course = course;
         this.grade = grade;
-        this.courseId=course.getId();
-        this.courseName=course.getName();
-        this.creditCourse=course.getCredit();
-        this.dateExam=course.getExam();
-        this.roomCourse=course.getRoom();
+        this.courseId = course.getId();
+        this.courseName = course.getName();
+        this.creditCourse = course.getCredit();
+        this.dateExam = course.getExam();
+        this.roomCourse = course.getRoom();
 
     }
 

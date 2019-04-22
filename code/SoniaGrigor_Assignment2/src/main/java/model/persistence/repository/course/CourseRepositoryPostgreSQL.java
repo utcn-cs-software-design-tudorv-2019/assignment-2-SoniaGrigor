@@ -1,24 +1,22 @@
 package model.persistence.repository.course;
 
 import model.persistence.entity.Course;
+import model.persistence.my_utility.HibernateUtil;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
 import java.util.List;
 
 public class CourseRepositoryPostgreSQL implements CourseRepository {
 
-    private final SessionFactory sessionFactory;
     private Session session;
 
-    public CourseRepositoryPostgreSQL(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public CourseRepositoryPostgreSQL() {
     }
 
     @Override
     public List<Course> getAll() {
         try {
-            session = sessionFactory.openSession();
+            session = HibernateUtil.getSession();
             session.beginTransaction();
             List<Course> courseList = session.createCriteria(Course.class).list();
             session.getTransaction().commit();
@@ -34,7 +32,7 @@ public class CourseRepositoryPostgreSQL implements CourseRepository {
     public Course get(int id) {
         Course course;
         try {
-            session = sessionFactory.openSession();
+            session = HibernateUtil.getSession();
             session.beginTransaction();
             course = (Course) session.get(Course.class, id);
             session.getTransaction().commit();
@@ -49,7 +47,7 @@ public class CourseRepositoryPostgreSQL implements CourseRepository {
     @Override
     public boolean save(Course course) {
         try {
-            session = sessionFactory.openSession();
+            session = HibernateUtil.getSession();
             session.beginTransaction();
             session.save(course);
             session.getTransaction().commit();
@@ -64,7 +62,7 @@ public class CourseRepositoryPostgreSQL implements CourseRepository {
     @Override
     public boolean deleteAll() {
         try {
-            session = sessionFactory.openSession();
+            session = HibernateUtil.getSession();
             session.beginTransaction();
             List<Course> courseList = getAll();
             courseList.forEach(course -> session.delete(course));
@@ -80,7 +78,7 @@ public class CourseRepositoryPostgreSQL implements CourseRepository {
     @Override
     public boolean update(Course course) {
         try {
-            session = sessionFactory.openSession();
+            session = HibernateUtil.getSession();
             session.beginTransaction();
             session.update(course);
             session.getTransaction().commit();
@@ -95,7 +93,7 @@ public class CourseRepositoryPostgreSQL implements CourseRepository {
     @Override
     public boolean delete(Course course) {
         try {
-            session = sessionFactory.openSession();
+            session = HibernateUtil.getSession();
             session.beginTransaction();
             session.delete(course);
             session.getTransaction().commit();

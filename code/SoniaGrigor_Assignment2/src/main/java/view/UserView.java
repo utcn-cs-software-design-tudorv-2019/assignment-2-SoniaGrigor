@@ -1,10 +1,8 @@
 package view;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import controller.UserController;
-import model.business.course.CourseService;
-import model.business.student.StudentService;
-import model.business.user.AuthenticationService;
-import model.business.user.UserService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,20 +10,24 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.business.user.UserService;
 import model.persistence.entity.User;
+import model.persistence.my_utility.GuiceModule;
 import model.persistence.my_utility.Utility;
+
+import javax.inject.Inject;
 
 import static model.persistence.my_utility.ProjectConstants.TEACHER_TITLE;
 
 public class UserView {
 
+    public static Injector injector = Guice.createInjector(new GuiceModule());
+
+    @Inject
+    private static UserService userService = injector.getInstance(UserService.class);
+
     Stage window;
     Scene sceneMain;
-
-    private AuthenticationService authenticationService;
-    private StudentService studentService;
-    private CourseService courseService;
-    private UserService userService;
 
     int idUser = Utility.getLoggedUser();
     private User user;
@@ -33,14 +35,9 @@ public class UserView {
     private Button basicOperationButton;
     private Button specificOperationButton;
 
-    public UserView(AuthenticationService authenticationService, CourseService courseService, StudentService studentService, UserService userService) {
+    public UserView() {
         window = new Stage();
         window.setTitle(TEACHER_TITLE);
-
-        this.authenticationService = authenticationService;
-        this.courseService = courseService;
-        this.studentService = studentService;
-        this.userService=userService;
 
         user = userService.findById(idUser);
 
@@ -55,7 +52,7 @@ public class UserView {
         leftPane.setAlignment(Pos.CENTER_RIGHT);
         leftPane.setPadding(new Insets(20, 20, 20, 400));
         basicOperationButton = new Button("Basic Operations");
-        basicOperationButton.setOnAction(e->UserController.handleBasicOperationButtonEvent(authenticationService, courseService,studentService,userService));
+        basicOperationButton.setOnAction(e -> UserController.handleBasicOperationButtonEvent());
         leftPane.getChildren().addAll(basicOperationButton);
 
 
@@ -63,7 +60,7 @@ public class UserView {
         rightPane.setAlignment(Pos.CENTER);
         rightPane.setPadding(new Insets(20, 400, 20, 20));
         specificOperationButton = new Button("Specific Operations");
-        specificOperationButton.setOnAction(e->UserController.handleSpecificOperationButtonEvent(authenticationService, courseService,studentService,userService));
+        specificOperationButton.setOnAction(e -> UserController.handleSpecificOperationButtonEvent());
         rightPane.getChildren().addAll(specificOperationButton);
 
 

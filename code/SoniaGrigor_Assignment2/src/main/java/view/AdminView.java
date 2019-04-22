@@ -1,5 +1,7 @@
 package view;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import controller.AdminController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,26 +13,23 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.business.course.CourseService;
-import model.business.student.StudentService;
-import model.business.user.AuthenticationService;
 import model.business.user.UserService;
 import model.persistence.entity.User;
+import model.persistence.my_utility.GuiceModule;
 import model.persistence.my_utility.Utility;
+
+import javax.inject.Inject;
 
 import static model.persistence.my_utility.ProjectConstants.STUDENT_TITLE;
 
 public class AdminView {
+    private static User user;
     Stage window;
     Scene sceneMain;
-    private AuthenticationService authenticationService;
-    private StudentService studentService;
-    private CourseService courseService;
-    private UserService userService;
-
-    private static User user;
     int idUser = Utility.getLoggedUser();
-
+    private Injector injector = Guice.createInjector(new GuiceModule());
+    @Inject
+    private UserService userService = injector.getInstance(UserService.class);
     private TextField nameField;
     private TextField usernameField;
     private PasswordField passwordField;
@@ -39,16 +38,10 @@ public class AdminView {
 
     private Button updateButton;
     private Button deleteButton;
-    private Button viewCoursesButton;
 
-    public AdminView(AuthenticationService authenticationService, CourseService courseService, StudentService studentService, UserService userService) {
+    public AdminView() {
         window = new Stage();
         window.setTitle(STUDENT_TITLE);
-
-        this.authenticationService = authenticationService;
-        this.courseService = courseService;
-        this.studentService = studentService;
-        this.userService = userService;
 
         user = userService.findById(idUser);
 
@@ -90,9 +83,9 @@ public class AdminView {
         bottomPane.setPadding(new Insets(20, 20, 100, 20));
         updateButton = new Button("Update Information");
 
-        updateButton.setOnAction(e -> AdminController.handleUpdateButtonEvent(userService,nameField.getText(), usernameField.getText(), passwordField.getText(), emailField.getText(), cnpField.getText()  ));
+        updateButton.setOnAction(e -> AdminController.handleUpdateButtonEvent(userService, nameField.getText(), usernameField.getText(), passwordField.getText(), emailField.getText(), cnpField.getText()));
         deleteButton = new Button("Delete Accout");
-        deleteButton.setOnAction(e -> AdminController.handleDeleteButtonEvent( authenticationService,  studentService,  userService,  courseService));
+        deleteButton.setOnAction(e -> AdminController.handleDeleteButtonEvent());
         bottomPane.getChildren().addAll(updateButton, deleteButton);
 
         layout.setTop(topPane);

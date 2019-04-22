@@ -14,10 +14,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.business.course.CourseService;
-import model.business.student.StudentService;
-import model.business.user.AuthenticationService;
-import model.business.user.UserService;
 import model.persistence.entity.Course;
 import model.persistence.entity.Enrollment;
 import model.persistence.entity.StudentPersonalInfo;
@@ -33,11 +29,6 @@ public class SpecificOperationView {
 
     int idUser = Utility.getLoggedUser();
     private User user;
-
-    private final AuthenticationService authenticationService;
-    private final CourseService courseService;
-    private final StudentService studentService;
-    private final UserService userService;
 
     private Button enrollStudentButton;
     private Button viewStudentsButton;
@@ -58,14 +49,9 @@ public class SpecificOperationView {
     private TableView<Course> allCourseTable = new TableView<Course>();
 
 
-    public SpecificOperationView(AuthenticationService authenticationService, CourseService courseService, StudentService studentService, UserService userService) {
+    public SpecificOperationView() {
         window = new Stage();
         window.setTitle(TEACHER_TITLE);
-
-        this.authenticationService = authenticationService;
-        this.courseService = courseService;
-        this.studentService = studentService;
-        this.userService = userService;
 
         BorderPane layout = new BorderPane();
         layout.setId("root");
@@ -80,7 +66,7 @@ public class SpecificOperationView {
         leftPane.setPadding(new Insets(0, 0, 10, 20));
         instructions = new Label("\nPlease press buttons in order to see data.\nPlease select data from table.");
         viewStudentsButton = new Button("View students");
-        viewStudentsButton.setOnAction(e -> SpecificOperationController.handleViewStudentsButtonEvent(studentService, studentTable));
+        viewStudentsButton.setOnAction(e -> SpecificOperationController.handleViewStudentsButtonEvent(studentTable));
         groupLabel = new Label("Enter a new group ");
         groupField = new TextField();
         groupField.textProperty().addListener(new ChangeListener<String>() {
@@ -93,29 +79,29 @@ public class SpecificOperationView {
             }
         });
         groupStudentButton = new Button("Set new group");
-        groupStudentButton.setOnAction(e -> SpecificOperationController.handleGroupStudentButtonEvent(studentService, Integer.parseInt(groupField.getText()), studentTable.getSelectionModel().getSelectedItem().getId()));
+        groupStudentButton.setOnAction(e -> SpecificOperationController.handleGroupStudentButtonEvent(Integer.parseInt(groupField.getText()), studentTable.getSelectionModel().getSelectedItem().getId()));
         viewAllCoursesButton = new Button("View All Courses");
-        viewAllCoursesButton.setOnAction(e -> SpecificOperationController.handleViewAllCoursesButtonEvent(courseService, allCourseTable));
+        viewAllCoursesButton.setOnAction(e -> SpecificOperationController.handleViewAllCoursesButtonEvent(allCourseTable));
         enrollStudentButton = new Button("Enroll student");
-        enrollStudentButton.setOnAction(e -> SpecificOperationController.handleEnrollStudentButtonEvent(studentService,studentTable.getSelectionModel().getSelectedItem().getId(), allCourseTable.getSelectionModel().getSelectedItem().getId()));
+        enrollStudentButton.setOnAction(e -> SpecificOperationController.handleEnrollStudentButtonEvent(studentTable.getSelectionModel().getSelectedItem().getId(), allCourseTable.getSelectionModel().getSelectedItem().getId()));
         leftPane.getChildren().addAll(instructions, viewStudentsButton, studentTable, groupLabel, groupField, groupStudentButton, viewAllCoursesButton, allCourseTable, enrollStudentButton);
 
         VBox rightPane = new VBox(10);
         rightPane.setAlignment(Pos.CENTER);
         rightPane.setPadding(new Insets(0, 400, 0, 10));
         viewEnrollCoursesButton = new Button("View Enroll Courses");
-        viewEnrollCoursesButton.setOnAction(e -> SpecificOperationController.handleViewEnrollCoursesButtonEvent(courseService, courseTable, studentTable));
+        viewEnrollCoursesButton.setOnAction(e -> SpecificOperationController.handleViewEnrollCoursesButtonEvent(courseTable, studentTable));
         gradeLabel = new Label("Enter a new grade ");
         gradeField = new TextField();
         gradeStudentButton = new Button("Set new grade");
-        gradeStudentButton.setOnAction(e -> SpecificOperationController.handleGradeStudentButtonEvent(studentService, courseTable, studentTable, Integer.parseInt(gradeField.getText())));
+        gradeStudentButton.setOnAction(e -> SpecificOperationController.handleGradeStudentButtonEvent(courseTable, studentTable, Integer.parseInt(gradeField.getText())));
         rightPane.getChildren().addAll(viewEnrollCoursesButton, courseTable, gradeLabel, gradeField, gradeStudentButton);
 
         VBox bottomPane = new VBox(10);
         bottomPane.setAlignment(Pos.CENTER);
         bottomPane.setPadding(new Insets(0, 10, 10, 10));
         generateRaport = new Button("Generate raport");
-        generateRaport.setOnAction(e -> SpecificOperationController.handleGenerateRaportButtonEvent(userService));
+        generateRaport.setOnAction(e -> SpecificOperationController.handleGenerateRaportButtonEvent());
         bottomPane.getChildren().addAll(generateRaport);
 
         layout.setTop(topPane);

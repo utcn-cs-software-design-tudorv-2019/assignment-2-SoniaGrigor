@@ -11,38 +11,24 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.business.course.CourseService;
-import model.business.student.StudentService;
-import model.business.user.AuthenticationService;
-import model.business.user.UserService;
 
 import java.io.FileNotFoundException;
 
 import static model.persistence.my_utility.ProjectConstants.LOGIN_TITLE;
 
 public class LoginView {
-    Stage window;
-    private final AuthenticationService authenticationService;
-    private final CourseService courseService;
-    private final StudentService studentService;
-    private final UserService userService;
-
     public TextField usernameField;
+    Stage window;
     private PasswordField passwordField;
     private Label registerLabel;
     private Button loginButton;
     private Button registerButton;
 
 
-    public LoginView(AuthenticationService authenticationService, CourseService courseService, StudentService studentService, UserService userService) throws FileNotFoundException {
+    public LoginView() throws FileNotFoundException {
 
         window = new Stage();
         window.setTitle(LOGIN_TITLE);
-
-        this.authenticationService = authenticationService;
-        this.courseService = courseService;
-        this.studentService = studentService;
-        this.userService=userService;
 
         BorderPane layout = new BorderPane();
         layout.setId("root");
@@ -72,9 +58,9 @@ public class LoginView {
         bottomPane.setAlignment(Pos.CENTER);
         bottomPane.setPadding(new Insets(20, 20, 100, 20));
         loginButton = new Button("Login");
-        loginButton.setOnAction(e -> LoginController.handleLoginButtonEvent(usernameField.getText(),passwordField.getText(), authenticationService, courseService, studentService, userService ));
+        loginButton.setOnAction(e -> LoginController.handleLoginButtonEvent(usernameField.getText(), passwordField.getText()));
         registerButton = new Button("Register");
-        registerButton.setOnAction(e -> LoginController.handleRegisterButtonEvent(authenticationService,courseService,studentService,userService));
+        registerButton.setOnAction(e -> LoginController.handleRegisterButtonEvent());
         registerLabel = new Label("If you do not have an account, press register.");
         bottomPane.getChildren().addAll(loginButton, registerLabel, registerButton);
 

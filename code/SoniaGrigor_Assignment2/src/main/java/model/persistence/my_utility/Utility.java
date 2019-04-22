@@ -12,24 +12,23 @@ public class Utility {
             String currentLine = reader.readLine();
             reader.close();
             return Integer.parseInt(currentLine);
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             return -1;
         }
     }
 
     public static void setLoggedUser(int id) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(LOGGED_USER_FILE,false));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(LOGGED_USER_FILE, false));
         writer.write(String.valueOf(id));
         writer.close();
 
     }
 
     public static int getUserRole(String username) {
-        if(username.contains("admin")|| username.contains("teacher")){
+        if (username.contains("admin") || username.contains("teacher")) {
             return 1;
-        }
-        else {
+        } else {
             return 2;
         }
     }

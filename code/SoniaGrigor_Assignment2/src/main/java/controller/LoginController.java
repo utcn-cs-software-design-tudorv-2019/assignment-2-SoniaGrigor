@@ -1,16 +1,18 @@
 package controller;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import javafx.scene.control.Alert;
-import model.business.course.CourseService;
 import model.business.student.StudentService;
 import model.business.user.AuthenticationService;
-import model.business.user.UserService;
+import model.persistence.my_utility.GuiceModule;
 import model.persistence.my_utility.Utility;
 import model.persistence.repository.user.AuthenticationException;
 import view.RegisterView;
 import view.StudentView;
 import view.UserView;
 
+import javax.inject.Inject;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -18,8 +20,14 @@ import static model.persistence.my_utility.ProjectConstants.LOGIN_FAIL;
 import static model.persistence.my_utility.ProjectConstants.LOGIN_FAIL_MESSAGE;
 
 public class LoginController {
+    public static Injector injector = Guice.createInjector(new GuiceModule());
 
-    public static void handleLoginButtonEvent(String username, String password, AuthenticationService authenticationService, CourseService courseService, StudentService studentService, UserService userService) {
+    @Inject
+    private static AuthenticationService authenticationService = injector.getInstance(AuthenticationService.class);
+    @Inject
+    private static StudentService studentService = injector.getInstance(StudentService.class);
+
+    public static void handleLoginButtonEvent(String username, String password) {
 
         UserView userView;
         StudentView studentView;
@@ -27,8 +35,8 @@ public class LoginController {
         boolean loginNotification = false;
         try {
             if (Utility.getUserRole(username.toLowerCase()) == 2) {
-                loginNotification=studentService.login(username,password);
-            }else {
+                loginNotification = studentService.login(username, password);
+            } else {
                 loginNotification = authenticationService.login(username, password);
             }
 
@@ -38,7 +46,7 @@ public class LoginController {
         } catch (IOException e) {
             e.printStackTrace();
             loginNotification = false;
-        } catch (IndexOutOfBoundsException e2){
+        } catch (IndexOutOfBoundsException e2) {
             e2.printStackTrace();
             loginNotification = false;
         }
@@ -51,17 +59,17 @@ public class LoginController {
             alert.showAndWait();
         } else {
             if (Utility.getUserRole(username.toLowerCase()) == 2)
-                studentView = new StudentView(authenticationService, courseService, studentService, userService);
+                studentView = new StudentView();
             else {
-                userView = new UserView(authenticationService, courseService, studentService, userService);
+                userView = new UserView();
             }
         }
 
     }
 
-    public static void handleRegisterButtonEvent(AuthenticationService authenticationService, CourseService courseService, StudentService studentService, UserService userService) {
+    public static void handleRegisterButtonEvent() {
         try {
-            new RegisterView(authenticationService, courseService, studentService, userService);
+            new RegisterView();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

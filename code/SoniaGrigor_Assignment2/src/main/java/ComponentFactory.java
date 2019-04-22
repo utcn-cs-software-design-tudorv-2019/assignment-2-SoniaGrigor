@@ -1,4 +1,3 @@
-
 import model.persistence.my_utility.HibernateUtil;
 
 public class ComponentFactory {
@@ -8,7 +7,7 @@ public class ComponentFactory {
 
     public static synchronized HibernateUtil getInstance(Boolean componentsForTests) {
         if (instance == null) {
-            instance = new HibernateUtil(componentsForTests);
+            instance = new HibernateUtil();
         }
         return instance;
     }

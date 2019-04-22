@@ -10,18 +10,16 @@ import java.util.regex.Pattern;
 public class UserValidator {
     private static final String EMAIL_VALIDATION_REGEX = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
     private static final int MIN_PASSWORD_LENGTH = 8;
-
-    public List<String> getErrors() {
-        return errors;
-    }
-
     private final List<String> errors;
-
     private final User user;
 
     public UserValidator(User user) {
         this.user = user;
         errors = new ArrayList<>();
+    }
+
+    public List<String> getErrors() {
+        return errors;
     }
 
     public boolean validate() {

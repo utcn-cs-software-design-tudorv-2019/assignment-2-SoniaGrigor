@@ -1,6 +1,5 @@
 package model.persistence.repository.security;
 
-import org.hibernate.SessionFactory;
 import model.persistence.entity.Right;
 import model.persistence.entity.Role;
 import model.persistence.entity.User;
@@ -9,12 +8,8 @@ import java.util.List;
 
 public class RightsRolesRepositoryPostgreSQL implements RightsRolesRepository {
 
-    private final SessionFactory sessionFactory;
-
-    public RightsRolesRepositoryPostgreSQL(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public RightsRolesRepositoryPostgreSQL() {
     }
-
 
     @Override
     public void addRole(String role) {

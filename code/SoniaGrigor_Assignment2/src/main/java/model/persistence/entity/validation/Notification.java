@@ -21,15 +21,15 @@ public class Notification<T> {
         return errors.size() > 0;
     }
 
-    public void setResult(T result) {
-        this.result = result;
-    }
-
     public T getResult() throws ResultFetchException {
         if (hasErrors()) {
             throw new ResultFetchException(errors);
         }
         return result;
+    }
+
+    public void setResult(T result) {
+        this.result = result;
     }
 
     public String getFormattedErrors() {

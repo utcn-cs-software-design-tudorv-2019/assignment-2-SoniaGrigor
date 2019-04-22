@@ -1,5 +1,7 @@
 package controller;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
@@ -10,8 +12,9 @@ import model.business.course.CourseService;
 import model.business.student.StudentService;
 import model.business.user.UserService;
 import model.persistence.entity.*;
-import model.persistence.entity.Course;
+import model.persistence.my_utility.GuiceModule;
 
+import javax.inject.Inject;
 import java.sql.Date;
 import java.util.List;
 
@@ -19,7 +22,16 @@ import static model.persistence.my_utility.ProjectConstants.*;
 
 public class SpecificOperationController {
 
-    public static void handleGenerateRaportButtonEvent(UserService userService) {
+    private static Injector injector = Guice.createInjector(new GuiceModule());
+
+    @Inject
+    private static CourseService courseService = injector.getInstance(CourseService.class);
+    @Inject
+    private static StudentService studentService = injector.getInstance(StudentService.class);
+    @Inject
+    private static UserService userService = injector.getInstance(UserService.class);
+
+    public static void handleGenerateRaportButtonEvent() {
         userService.generateRaport();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(REPORT_TITLE);
@@ -27,7 +39,7 @@ public class SpecificOperationController {
         alert.showAndWait();
     }
 
-    public static void handleGroupStudentButtonEvent(StudentService studentService, int group, int idStudent) {
+    public static void handleGroupStudentButtonEvent(int group, int idStudent) {
         if (!studentService.updateGroup(idStudent, group)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(OPERATION_FAILED);
@@ -36,7 +48,7 @@ public class SpecificOperationController {
         }
     }
 
-    public static void handleViewAllCoursesButtonEvent(CourseService courseService, TableView<Course> allCourseTable) {
+    public static void handleViewAllCoursesButtonEvent(TableView<Course> allCourseTable) {
         allCourseTable.getColumns().clear();
 
         List<Course> myCourseList = courseService.findAll();
@@ -62,7 +74,7 @@ public class SpecificOperationController {
         allCourseTable.getColumns().addAll(nameCol, creditCol, examCol, roomCol);
     }
 
-    public static void handleViewEnrollCoursesButtonEvent(CourseService courseService, TableView<Enrollment> courseTable, TableView<StudentPersonalInfo> studentTable) {
+    public static void handleViewEnrollCoursesButtonEvent(TableView<Enrollment> courseTable, TableView<StudentPersonalInfo> studentTable) {
         courseTable.getColumns().clear();
         List<Enrollment> myCourseList = courseService.getMyCourses(studentTable.getSelectionModel().getSelectedItem().getId());
         ObservableList<Enrollment> data = FXCollections.observableList(myCourseList);
@@ -96,13 +108,13 @@ public class SpecificOperationController {
 
     }
 
-    public static void handleGradeStudentButtonEvent(StudentService studentService,TableView<Enrollment> courseTable, TableView<StudentPersonalInfo> studentTable, int grade ) {
+    public static void handleGradeStudentButtonEvent(TableView<Enrollment> courseTable, TableView<StudentPersonalInfo> studentTable, int grade) {
         int idStudent = studentTable.getSelectionModel().getSelectedItem().getId();
         int idCourse = courseTable.getSelectionModel().getSelectedItem().getCourseId();
         studentService.updateGrade(idStudent, idCourse, grade);
     }
 
-    public static void handleViewStudentsButtonEvent(StudentService studentService,  TableView<StudentPersonalInfo> studentTable) {
+    public static void handleViewStudentsButtonEvent(TableView<StudentPersonalInfo> studentTable) {
         studentTable.getColumns().clear();
 
         List<StudentPersonalInfo> studentList = studentService.findAll();
@@ -129,7 +141,7 @@ public class SpecificOperationController {
 
     }
 
-    public static void handleEnrollStudentButtonEvent(StudentService studentService, int idStudent, int idCourse) {
+    public static void handleEnrollStudentButtonEvent(int idStudent, int idCourse) {
         studentService.enrollCourse(idStudent, idCourse);
     }
 }

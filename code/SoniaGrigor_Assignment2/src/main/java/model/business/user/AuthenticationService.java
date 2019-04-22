@@ -9,7 +9,10 @@ import java.io.IOException;
 public interface AuthenticationService {
 
     Notification<Boolean> register(String name, String username, String password, String email, String cnp, String role);
+
     boolean login(String username, String password) throws AuthenticationException, IOException;
+
     boolean logout(User user);
+
     int getLastIndex();
 }

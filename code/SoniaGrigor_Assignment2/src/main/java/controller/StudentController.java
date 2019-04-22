@@ -1,12 +1,13 @@
 package controller;
 
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import javafx.scene.control.Alert;
-import model.business.course.CourseService;
 import model.business.student.StudentService;
-import model.business.user.AuthenticationService;
-import model.business.user.UserService;
 import model.persistence.entity.Student;
 import model.persistence.entity.builder.StudentBuilder;
+import model.persistence.my_utility.GuiceModule;
 import model.persistence.my_utility.Utility;
 import view.LoginView;
 
@@ -19,8 +20,11 @@ import static model.persistence.my_utility.ProjectConstants.PASWORD_MESSAGE;
 public class StudentController {
 
     public static Student student;
+    private static Injector injector = Guice.createInjector(new GuiceModule());
+    @Inject
+    private static StudentService studentService = injector.getInstance(StudentService.class);
 
-    public static void handleUpdateButtonEvent(StudentService studentService, String name, String username, String password, String email, String cnp, int cardNo, int group) {
+    public static void handleUpdateButtonEvent(String name, String username, String password, String email, String cnp, int cardNo, int group) {
 
         if (password.equals("")) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -28,7 +32,7 @@ public class StudentController {
             alert.setHeaderText(PASWORD_MESSAGE);
             alert.showAndWait();
         } else {
-            student = (Student) new StudentBuilder()
+            student = new StudentBuilder()
                     .setId(Utility.getLoggedUser())
                     .setGroup(group)
                     .setCardNo(cardNo)
@@ -43,10 +47,10 @@ public class StudentController {
 
     }
 
-    public static void handleDeleteButtonEvent(AuthenticationService authenticationService, StudentService studentService, UserService userService, CourseService courseService) {
+    public static void handleDeleteButtonEvent() {
         studentService.removeById(Utility.getLoggedUser());
         try {
-            new LoginView(authenticationService, courseService, studentService, userService);
+            new LoginView();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

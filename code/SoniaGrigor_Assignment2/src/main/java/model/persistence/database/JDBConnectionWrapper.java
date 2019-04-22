@@ -19,9 +19,9 @@ public class JDBConnectionWrapper {
     public JDBConnectionWrapper(String schema) {
         try {
             Properties props = new Properties();
-            props.setProperty("user",USER);
-            props.setProperty("password",PASS);
-            props.setProperty("ssl","true");
+            props.setProperty("user", USER);
+            props.setProperty("password", PASS);
+            props.setProperty("ssl", "true");
             Class.forName(JDBC_DRIVER);
             connection = DriverManager.getConnection(DB_URL, props);
             //connection = DriverManager.getConnection(DB_URL + schema, USER, PASS);

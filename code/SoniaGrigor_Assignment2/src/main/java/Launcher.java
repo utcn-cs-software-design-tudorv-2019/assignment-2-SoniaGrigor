@@ -11,8 +11,6 @@ public class Launcher extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         HibernateUtil componentFactory = ComponentFactory.getInstance(false);
-        //SessionFactory sessionFactory= HibernateUtil.getSessionFactory();
-        //new LoginView(sessionFactory.getAuthenticationService(), sessionFactory.getCourseService(), sessionFactory.getStudentService(), sessionFactory.getUserService());
-        new LoginView(componentFactory.getAuthenticationService(), componentFactory.getCourseService(), componentFactory.getStudentService(), componentFactory.getUserService());
+        new LoginView();
     }
 }

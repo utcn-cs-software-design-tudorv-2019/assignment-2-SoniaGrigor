@@ -1,23 +1,19 @@
 package model.business.user;
 
-import model.business.security.RightsRolesService;
 import model.persistence.entity.User;
 import model.persistence.entity.validation.Notification;
 import model.persistence.repository.user.AuthenticationException;
 import model.persistence.repository.user.UserRepository;
-import org.hibernate.SessionFactory;
 
+import javax.inject.Inject;
 import java.util.List;
 
 public class UserServicePostgreSQL implements UserService {
-    private final SessionFactory sessionFactory;
-    private RightsRolesService rightsRolesService;
+
+    @Inject
     private UserRepository userRepository;
 
-    public UserServicePostgreSQL(SessionFactory sessionFactory,RightsRolesService rightsRolesService, UserRepository userRepository) {
-        this.sessionFactory=sessionFactory;
-        this.rightsRolesService=rightsRolesService;
-        this.userRepository=userRepository;
+    public UserServicePostgreSQL() {
     }
 
     @Override
