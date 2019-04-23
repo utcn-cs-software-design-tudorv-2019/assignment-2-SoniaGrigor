@@ -27,15 +27,6 @@ public class User implements Serializable {
     @Column
     private String CNP;
 
-//    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
-//    private Student student;
-
-//    @Column(name = "group_id")
-//    private String groupId;
-//
-//    @Column(name = "cardno")
-//    private int cardNo;
-
     public String getName() {
         return name;
     }
@@ -83,37 +74,6 @@ public class User implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-
-//    public String getGroupId() {
-//        return groupId;
-//    }
-//
-//    public void setGroupId(String groupId) {
-//        this.groupId = groupId;
-//    }
-//
-//    public int getCardNo() {
-//        return cardNo;
-//    }
-//
-//    public void setCardNo(int cardNo) {
-//        this.cardNo = cardNo;
-//    }
-
-//    @Override
-//    public String toString() {
-//        return "User{" +
-//                "id=" + id +
-//                ", name='" + name + '\'' +
-//                ", username='" + username + '\'' +
-//                ", password='" + password + '\'' +
-//                ", email='" + email + '\'' +
-//                ", CNP='" + CNP + '\'' +
-//                ", groupId='" + groupId + '\'' +
-//                ", cardNo=" + cardNo +
-//                '}';
-//    }
-
 
     @Override
     public String toString() {

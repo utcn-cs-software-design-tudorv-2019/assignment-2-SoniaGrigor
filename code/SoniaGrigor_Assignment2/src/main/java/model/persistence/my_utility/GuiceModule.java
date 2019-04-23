@@ -17,6 +17,8 @@ import model.persistence.repository.security.RightsRolesRepository;
 import model.persistence.repository.security.RightsRolesRepositoryPostgreSQL;
 import model.persistence.repository.student.StudentRepository;
 import model.persistence.repository.student.StudentRepositoryPostgreSQL;
+import model.persistence.repository.user.UserCourseRepository;
+import model.persistence.repository.user.UserCourseRepositoryPostgreSQL;
 import model.persistence.repository.user.UserRepository;
 import model.persistence.repository.user.UserRepositoryPostgreSQL;
 
@@ -28,6 +30,7 @@ public class GuiceModule extends AbstractModule {
         bind(UserRepository.class).to(UserRepositoryPostgreSQL.class);
         bind(CourseRepository.class).to(CourseRepositoryPostgreSQL.class);
         bind(RightsRolesRepository.class).to(RightsRolesRepositoryPostgreSQL.class);
+        bind(UserCourseRepository.class).to(UserCourseRepositoryPostgreSQL.class);
 
         bind(CourseService.class).to(CourseServicePostgreSQL.class);
         bind(RightsRolesService.class).to(RightsRolesServicePostgreSQL.class);

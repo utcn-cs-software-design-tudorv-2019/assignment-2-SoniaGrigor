@@ -60,22 +60,6 @@ public class CourseRepositoryPostgreSQL implements CourseRepository {
     }
 
     @Override
-    public boolean deleteAll() {
-        try {
-            session = HibernateUtil.getSession();
-            session.beginTransaction();
-            List<Course> courseList = getAll();
-            courseList.forEach(course -> session.delete(course));
-            session.getTransaction().commit();
-            session.close();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    @Override
     public boolean update(Course course) {
         try {
             session = HibernateUtil.getSession();

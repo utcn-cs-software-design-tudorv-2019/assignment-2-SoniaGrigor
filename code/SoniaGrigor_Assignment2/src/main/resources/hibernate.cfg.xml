@@ -28,9 +28,7 @@
         <mapping class="model.persistence.entity.Teacher"/>
         <mapping class="model.persistence.entity.Right"/>
         <mapping class="model.persistence.entity.Role"/>
-
-
-
+        <mapping class="model.persistence.entity.UserCourse"/>
 
 
     </session-factory>

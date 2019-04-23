@@ -1,16 +1,13 @@
 package model.persistence.repository.student;
 
 import model.persistence.entity.Student;
-import model.persistence.entity.StudentPersonalInfo;
-import model.persistence.entity.User;
+import model.persistence.entity.UserCourse;
 
 import java.util.List;
 
 public interface StudentRepository {
 
-    int findIdByUsernameAndPassword(String username, String password);
-
-    List<StudentPersonalInfo> getAll();
+    List<Student> getAll();
 
     boolean update(Student student);
 
@@ -18,15 +15,13 @@ public interface StudentRepository {
 
     boolean delete(Student student);
 
-    boolean deleteAll();
-
     boolean deleteById(int id);
 
-    boolean enrollCourse(int idUser, int idCourse);
+    boolean enrollCourse(UserCourse userCourse);
 
-    User get(int id);
+    Student get(int id);
 
-    void updateGrade(int idStudent, int idCourse, int grade);
+    boolean updateGrade(UserCourse userCourse);
 
     boolean updateGroup(int idStudent, int group);
 

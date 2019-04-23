@@ -11,7 +11,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import model.business.course.CourseService;
 import model.business.student.StudentService;
 import model.business.user.UserService;
-import model.persistence.entity.*;
+import model.persistence.entity.Course;
+import model.persistence.entity.Enrollment;
+import model.persistence.entity.Student;
+import model.persistence.entity.User;
 import model.persistence.my_utility.GuiceModule;
 
 import javax.inject.Inject;
@@ -31,12 +34,19 @@ public class SpecificOperationController {
     @Inject
     private static UserService userService = injector.getInstance(UserService.class);
 
-    public static void handleGenerateRaportButtonEvent() {
-        userService.generateRaport();
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(REPORT_TITLE);
-        alert.setHeaderText(REPORT_MESSAGE);
-        alert.showAndWait();
+    public static void handleGenerateRaportButtonEvent(TableView<Student> studentTable) {
+        int idStudent = studentTable.getSelectionModel().getSelectedItem().getId();
+        if (userService.generateRaport(idStudent)) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle(REPORT_TITLE);
+            alert.setHeaderText(REPORT_MESSAGE);
+            alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(REPORT_TITLE_ERROR);
+            alert.setHeaderText(REPORT_MESSAGE_ERROR);
+            alert.showAndWait();
+        }
     }
 
     public static void handleGroupStudentButtonEvent(int group, int idStudent) {
@@ -74,8 +84,14 @@ public class SpecificOperationController {
         allCourseTable.getColumns().addAll(nameCol, creditCol, examCol, roomCol);
     }
 
-    public static void handleViewEnrollCoursesButtonEvent(TableView<Enrollment> courseTable, TableView<StudentPersonalInfo> studentTable) {
+    public static void handleViewEnrollCoursesButtonEvent(TableView<Enrollment> courseTable, TableView<Student> studentTable) {
         courseTable.getColumns().clear();
+        if (studentTable.getSelectionModel().getSelectedItem() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("No selected student");
+            alert.setHeaderText("Please Select a student from the table");
+            alert.showAndWait();
+        }
         List<Enrollment> myCourseList = courseService.getMyCourses(studentTable.getSelectionModel().getSelectedItem().getId());
         ObservableList<Enrollment> data = FXCollections.observableList(myCourseList);
 
@@ -108,17 +124,17 @@ public class SpecificOperationController {
 
     }
 
-    public static void handleGradeStudentButtonEvent(TableView<Enrollment> courseTable, TableView<StudentPersonalInfo> studentTable, int grade) {
+    public static void handleGradeStudentButtonEvent(TableView<Enrollment> courseTable, TableView<Student> studentTable, int grade) {
         int idStudent = studentTable.getSelectionModel().getSelectedItem().getId();
         int idCourse = courseTable.getSelectionModel().getSelectedItem().getCourseId();
         studentService.updateGrade(idStudent, idCourse, grade);
     }
 
-    public static void handleViewStudentsButtonEvent(TableView<StudentPersonalInfo> studentTable) {
+    public static void handleViewStudentsButtonEvent(TableView<Student> studentTable) {
         studentTable.getColumns().clear();
 
-        List<StudentPersonalInfo> studentList = studentService.findAll();
-        ObservableList<StudentPersonalInfo> data = FXCollections.observableList(studentList);
+        List<Student> studentList = studentService.findAll();
+        ObservableList<Student> data = FXCollections.observableList(studentList);
 
         TableColumn idCol = new TableColumn("ID");
         idCol.setMinWidth(100);

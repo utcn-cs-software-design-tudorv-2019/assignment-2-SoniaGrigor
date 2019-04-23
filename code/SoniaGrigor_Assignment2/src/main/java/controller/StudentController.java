@@ -8,7 +8,7 @@ import model.business.student.StudentService;
 import model.persistence.entity.Student;
 import model.persistence.entity.builder.StudentBuilder;
 import model.persistence.my_utility.GuiceModule;
-import model.persistence.my_utility.Utility;
+import model.persistence.my_utility.UtilityAuthorization;
 import view.LoginView;
 
 import java.io.FileNotFoundException;
@@ -33,7 +33,7 @@ public class StudentController {
             alert.showAndWait();
         } else {
             student = new StudentBuilder()
-                    .setId(Utility.getLoggedUser())
+                    .setId(UtilityAuthorization.getLoggedUser())
                     .setGroup(group)
                     .setCardNo(cardNo)
                     .setName(name)
@@ -48,7 +48,7 @@ public class StudentController {
     }
 
     public static void handleDeleteButtonEvent() {
-        studentService.removeById(Utility.getLoggedUser());
+        studentService.removeById(UtilityAuthorization.getLoggedUser());
         try {
             new LoginView();
         } catch (FileNotFoundException e) {

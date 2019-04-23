@@ -1,13 +1,15 @@
 package model.business.student;
 
 import model.persistence.entity.Student;
-import model.persistence.entity.StudentPersonalInfo;
-import model.persistence.my_utility.Utility;
+import model.persistence.entity.User;
+import model.persistence.entity.UserCourse;
+import model.persistence.my_utility.UtilityAuthorization;
 import model.persistence.repository.student.StudentRepository;
+import model.persistence.repository.user.UserCourseRepository;
+import model.persistence.repository.user.UserRepository;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static model.business.user.AuthenticationServicePostgreSQL.encodePassword;
@@ -17,16 +19,17 @@ public class StudentServicePostgreSQL implements StudentService {
     @Inject
     private StudentRepository studentRepository;
 
+    @Inject
+    private UserRepository userRepository;
+
+    @Inject
+    private UserCourseRepository userCourseRepository;
+
     public StudentServicePostgreSQL() {
     }
 
     @Override
-    public int findIdByUsernameAndPassword(String username, String password) {
-        return studentRepository.findIdByUsernameAndPassword(username, password);
-    }
-
-    @Override
-    public List<StudentPersonalInfo> findAll() {
+    public List<Student> findAll() {
         return studentRepository.getAll();
     }
 
@@ -42,25 +45,16 @@ public class StudentServicePostgreSQL implements StudentService {
     }
 
     @Override
-    public boolean removeAll() {
-        return false;
-    }
-
-    @Override
     public boolean removeById(int id) {
+        userRepository.deleteById(userRepository.findByUsernameAndPassword(studentRepository.get(id).getUsername(), studentRepository.get(id).getPassword()).getId());
         return studentRepository.deleteById(id);
     }
 
     @Override
     public boolean enrollCourse(int idUser, int idCourse) {
-        return studentRepository.enrollCourse(idUser, idCourse);
-    }
-
-    @Override
-    public void enrollCourses(int idUser, ArrayList<Integer> idCourses) {
-        for (int idCourse = 0; idCourse < idCourses.size(); idCourse++) {
-            studentRepository.enrollCourse(idUser, idCourse);
-        }
+        User user = userRepository.findByUsernameAndPassword(studentRepository.get(idUser).getUsername(), studentRepository.get(idUser).getPassword());
+        UserCourse userCourse = new UserCourse(user.getId(), idCourse, 0);
+        return studentRepository.enrollCourse(userCourse);
     }
 
     @Override
@@ -69,8 +63,11 @@ public class StudentServicePostgreSQL implements StudentService {
     }
 
     @Override
-    public void updateGrade(int idStudent, int idCourse, int grade) {
-        studentRepository.updateGrade(idStudent, idCourse, grade);
+    public boolean updateGrade(int idStudent, int idCourse, int grade) {
+        User user = userRepository.findByUsernameAndPassword(studentRepository.get(idStudent).getUsername(), studentRepository.get(idStudent).getPassword());
+        UserCourse userCourseOld = userCourseRepository.getByDetails(user.getId(), idCourse);
+        UserCourse userCourse = new UserCourse(userCourseOld.getId(), user.getId(), idCourse, grade);
+        return studentRepository.updateGrade(userCourse);
     }
 
     @Override
@@ -81,7 +78,7 @@ public class StudentServicePostgreSQL implements StudentService {
     @Override
     public boolean login(String username, String password) throws IOException, IndexOutOfBoundsException {
         Student user = studentRepository.findByUsernameAndPassword(username, encodePassword(password));
-        Utility.setLoggedUser(user.getId());
+        UtilityAuthorization.setLoggedUser(user.getId());
 
         return user != null;
     }

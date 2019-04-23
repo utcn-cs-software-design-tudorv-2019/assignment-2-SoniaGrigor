@@ -10,7 +10,7 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        HibernateUtil componentFactory = ComponentFactory.getInstance(false);
+        HibernateUtil componentFactory = new HibernateUtil();
         new LoginView();
     }
 }

@@ -1,0 +1,7 @@
+Student{id=18, name='Roxana', username='roxi', email='erwkhs@jhbewf.fjs', CNP='29727265166', cardNo=8, group=11}
+
+Enrollment{, courseId=3, grade=5, courseName='SPG', creditCourse=4, dateExam=1970-01-01 22:45:29.372, roomCourse='Lofds'}
+Enrollment{, courseId=2, grade=10, courseName='MSH', creditCourse=5, dateExam=1970-01-01 22:41:45.673, roomCourse='M02'}
+
+No of courses: 2
+Average: 7.5

@@ -7,7 +7,7 @@ import model.business.user.UserService;
 import model.persistence.entity.User;
 import model.persistence.entity.builder.UserBuilder;
 import model.persistence.my_utility.GuiceModule;
-import model.persistence.my_utility.Utility;
+import model.persistence.my_utility.UtilityAuthorization;
 import view.LoginView;
 
 import javax.inject.Inject;
@@ -32,7 +32,7 @@ public class AdminController {
             alert.showAndWait();
         } else {
             user = new UserBuilder()
-                    .setId(Utility.getLoggedUser())
+                    .setId(UtilityAuthorization.getLoggedUser())
                     .setName(name)
                     .setUsername(username)
                     .setPassword(encodePassword(password))
@@ -45,7 +45,7 @@ public class AdminController {
     }
 
     public static void handleDeleteButtonEvent() {
-        userService.removeById(Utility.getLoggedUser());
+        userService.removeById(UtilityAuthorization.getLoggedUser());
         try {
             new LoginView();
         } catch (FileNotFoundException e) {

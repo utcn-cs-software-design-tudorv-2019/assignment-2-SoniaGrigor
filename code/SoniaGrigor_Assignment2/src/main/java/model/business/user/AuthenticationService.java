@@ -1,6 +1,5 @@
 package model.business.user;
 
-import model.persistence.entity.User;
 import model.persistence.entity.validation.Notification;
 import model.persistence.repository.user.AuthenticationException;
 
@@ -12,7 +11,4 @@ public interface AuthenticationService {
 
     boolean login(String username, String password) throws AuthenticationException, IOException;
 
-    boolean logout(User user);
-
-    int getLastIndex();
 }

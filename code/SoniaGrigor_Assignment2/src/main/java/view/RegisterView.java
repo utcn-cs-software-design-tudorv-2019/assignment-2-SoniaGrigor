@@ -1,20 +1,19 @@
 package view;
 
 import controller.RegisterController;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.FileNotFoundException;
-import java.util.stream.Collectors;
 
-import static model.persistence.my_utility.DBConstants.Roles.ROLES;
 import static model.persistence.my_utility.ProjectConstants.REGISTER_TITLE;
 
 public class RegisterView {
@@ -26,7 +25,6 @@ public class RegisterView {
     private PasswordField passwordField;
     private TextField emailField;
     private TextField cnpField;
-    private ChoiceBox roleListView;
     private Button registerButton;
 
     public RegisterView() throws FileNotFoundException {
@@ -48,8 +46,7 @@ public class RegisterView {
         Label labelPassword = new Label("Password");
         Label labelEmail = new Label("Email");
         Label labelCNP = new Label("CNP");
-        Label labelRole = new Label("Roles");
-        leftPane.getChildren().addAll(labelName, labelUsername, labelPassword, labelEmail, labelCNP, labelRole);
+        leftPane.getChildren().addAll(labelName, labelUsername, labelPassword, labelEmail, labelCNP);
 
 
         VBox rightPane = new VBox(30);
@@ -66,21 +63,12 @@ public class RegisterView {
         cnpField = new TextField();
         cnpField.setMinWidth(300);
 
-        roleListView = new ChoiceBox();
-        roleListView.setMinWidth(300);
-        ObservableList<String> roleItems = FXCollections.observableArrayList(ROLES);
-        roleListView.getItems().setAll(
-                roleItems.stream()
-                        .map(String::toUpperCase)
-                        .collect(Collectors.toList()));
-
-        rightPane.getChildren().addAll(nameField, usernameField, passwordField, emailField, cnpField, roleListView);
+        rightPane.getChildren().addAll(nameField, usernameField, passwordField, emailField, cnpField);
 
         VBox bottomPane = new VBox(30);
         bottomPane.setAlignment(Pos.CENTER);
         bottomPane.setPadding(new Insets(20, 20, 100, 20));
         registerButton = new Button("Register");
-        //String role= roleListView.getSelectionModel().getSelectedItem().toString();
         String role = "BASIC";
         registerButton.setOnAction(e -> RegisterController.handleRegisterButtonEvent(nameField.getText(), usernameField.getText(), passwordField.getText(), emailField.getText(), cnpField.getText(), role));
         bottomPane.getChildren().addAll(registerButton);

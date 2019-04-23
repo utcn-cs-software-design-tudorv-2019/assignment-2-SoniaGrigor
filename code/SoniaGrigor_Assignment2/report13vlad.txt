@@ -1,0 +1,6 @@
+Student{id=13, name='Vlad Fazekas', username='vlad', email='vlad.fazekas@gmail.com', CNP='1972526259844', cardNo=8, group=3}
+
+Enrollment{, courseId=1, grade=7, courseName='IIA', creditCourse=5, dateExam=1970-01-01 22:41:29.372, roomCourse='M02'}
+
+No of courses: 1
+Average: 7.0

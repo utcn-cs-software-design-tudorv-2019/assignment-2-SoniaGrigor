@@ -25,8 +25,9 @@ public final class ProjectConstants {
     public static String OPERATION_FAILED = "Operation failed";
     public static String OPERATION_FAILED_MESSAGE = "An error occurred during the last operation";
 
-    public static String REPORT_FILE = "report.txt";
+    public static String REPORT_FILE = "report";
     public static String REPORT_TITLE = "Report generated";
     public static String REPORT_MESSAGE = "A new report was generated. Please check the generated file.";
-
+    public static String REPORT_TITLE_ERROR = "Can't generate a raport";
+    public static String REPORT_MESSAGE_ERROR = "A new report can't be generated. Please check the log file.";
 }

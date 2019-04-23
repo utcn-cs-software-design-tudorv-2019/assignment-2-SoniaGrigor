@@ -86,9 +86,4 @@ public class UserRepositoryPostgreSQL implements UserRepository {
             return null;
         }
     }
-
-    @Override
-    public void generateRaport() {
-
-    }
 }

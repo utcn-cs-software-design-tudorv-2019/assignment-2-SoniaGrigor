@@ -84,7 +84,6 @@ public class Enrollment {
     @Override
     public String toString() {
         return "Enrollment{" +
-                "course=" + course +
                 ", courseId=" + courseId +
                 ", grade=" + grade +
                 ", courseName='" + courseName + '\'' +

@@ -33,14 +33,16 @@ public class Student implements Serializable {
     @Column(name = "group_id")
     private int group;
 
-//    @OneToOne
-//    @JoinColumn(name="user")
-//    private User user;
-
     public Student() {
     }
 
     public Student(int cardNo, int group) {
+        this.cardNo = cardNo;
+        this.group = group;
+    }
+
+    public Student(int id, int cardNo, int group) {
+        this.id = id;
         this.cardNo = cardNo;
         this.group = group;
     }
@@ -109,22 +111,12 @@ public class Student implements Serializable {
         this.group = group;
     }
 
-//    public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
-
-
     @Override
     public String toString() {
         return "Student{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", CNP='" + CNP + '\'' +
                 ", cardNo=" + cardNo +

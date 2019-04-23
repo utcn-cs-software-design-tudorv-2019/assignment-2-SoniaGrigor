@@ -5,7 +5,7 @@ import model.persistence.entity.User;
 import model.persistence.entity.builder.UserBuilder;
 import model.persistence.entity.validation.Notification;
 import model.persistence.entity.validation.UserValidator;
-import model.persistence.my_utility.Utility;
+import model.persistence.my_utility.UtilityAuthorization;
 import model.persistence.repository.security.RightsRolesRepository;
 import model.persistence.repository.user.UserRepository;
 
@@ -74,18 +74,9 @@ public class AuthenticationServicePostgreSQL implements AuthenticationService {
     @Override
     public boolean login(String username, String password) throws IOException, IndexOutOfBoundsException {
         User user = userRepository.findByUsernameAndPassword(username, encodePassword(password));
-        Utility.setLoggedUser(user.getId());
+        UtilityAuthorization.setLoggedUser(user.getId());
 
         return user != null;
     }
 
-    @Override
-    public boolean logout(User user) {
-        return false;
-    }
-
-    @Override
-    public int getLastIndex() {
-        return userRepository.getLastIndex();
-    }
 }

@@ -12,8 +12,6 @@ public interface CourseRepository {
 
     boolean save(Course course);
 
-    boolean deleteAll();
-
     boolean update(Course course);
 
     boolean delete(Course course);

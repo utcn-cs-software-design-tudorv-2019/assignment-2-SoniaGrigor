@@ -1,8 +1,7 @@
 package model.persistence.repository.student;
 
 import model.persistence.entity.Student;
-import model.persistence.entity.StudentPersonalInfo;
-import model.persistence.entity.User;
+import model.persistence.entity.UserCourse;
 import model.persistence.my_utility.HibernateUtil;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -18,13 +17,19 @@ public class StudentRepositoryPostgreSQL implements StudentRepository {
     }
 
     @Override
-    public int findIdByUsernameAndPassword(String username, String password) {
-        return 0;
-    }
+    public List<Student> getAll() {
+        try {
+            session = HibernateUtil.getSession();
+            session.beginTransaction();
+            List<Student> studentList = session.createCriteria(Student.class).list();
+            session.getTransaction().commit();
+            session.close();
 
-    @Override
-    public List<StudentPersonalInfo> getAll() {
-        return null;
+            return studentList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -45,11 +50,6 @@ public class StudentRepositoryPostgreSQL implements StudentRepository {
         session.getTransaction().commit();
         session.close();
         return true;
-    }
-
-    @Override
-    public boolean deleteAll() {
-        return false;
     }
 
     @Override
@@ -74,17 +74,28 @@ public class StudentRepositoryPostgreSQL implements StudentRepository {
     }
 
     @Override
-    public boolean enrollCourse(int idUser, int idCourse) {
-        return false;
+    public boolean enrollCourse(UserCourse userCourse) {
+        try {
+            session = HibernateUtil.getSession();
+            session.beginTransaction();
+            session.save(userCourse);
+            session.getTransaction().commit();
+            session.close();
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
-    public User get(int id) {
+    public Student get(int id) {
         try {
             session = HibernateUtil.getSession();
             session.beginTransaction();
             Criteria criteria = session.createCriteria(Student.class).add(Restrictions.eq("id", id));
-            User user = (User) criteria.list().get(0);
+            Student user = (Student) criteria.list().get(0);
             session.getTransaction().commit();
             session.close();
             return user;
@@ -95,8 +106,19 @@ public class StudentRepositoryPostgreSQL implements StudentRepository {
     }
 
     @Override
-    public void updateGrade(int idStudent, int idCourse, int grade) {
+    public boolean updateGrade(UserCourse userCourse) {
+        try {
+            session = HibernateUtil.getSession();
+            session.beginTransaction();
+            session.update(userCourse);
+            session.getTransaction().commit();
+            session.close();
 
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

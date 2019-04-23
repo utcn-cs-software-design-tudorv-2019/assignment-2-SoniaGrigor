@@ -6,7 +6,7 @@ import javafx.scene.control.Alert;
 import model.business.student.StudentService;
 import model.business.user.AuthenticationService;
 import model.persistence.my_utility.GuiceModule;
-import model.persistence.my_utility.Utility;
+import model.persistence.my_utility.UtilityAuthorization;
 import model.persistence.repository.user.AuthenticationException;
 import view.RegisterView;
 import view.StudentView;
@@ -34,7 +34,7 @@ public class LoginController {
 
         boolean loginNotification = false;
         try {
-            if (Utility.getUserRole(username.toLowerCase()) == 2) {
+            if (UtilityAuthorization.getUserRole(username.toLowerCase()) == 2) {
                 loginNotification = studentService.login(username, password);
             } else {
                 loginNotification = authenticationService.login(username, password);
@@ -58,7 +58,7 @@ public class LoginController {
             alert.setContentText("Unable to login!");
             alert.showAndWait();
         } else {
-            if (Utility.getUserRole(username.toLowerCase()) == 2)
+            if (UtilityAuthorization.getUserRole(username.toLowerCase()) == 2)
                 studentView = new StudentView();
             else {
                 userView = new UserView();

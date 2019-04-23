@@ -16,9 +16,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.persistence.entity.Course;
 import model.persistence.entity.Enrollment;
-import model.persistence.entity.StudentPersonalInfo;
+import model.persistence.entity.Student;
 import model.persistence.entity.User;
-import model.persistence.my_utility.Utility;
+import model.persistence.my_utility.UtilityAuthorization;
 
 import static model.persistence.my_utility.ProjectConstants.TEACHER_TITLE;
 
@@ -27,7 +27,7 @@ public class SpecificOperationView {
     Stage window;
     Scene sceneMain;
 
-    int idUser = Utility.getLoggedUser();
+    int idUser = UtilityAuthorization.getLoggedUser();
     private User user;
 
     private Button enrollStudentButton;
@@ -44,7 +44,7 @@ public class SpecificOperationView {
     private Label groupLabel;
     private Label instructions;
 
-    private TableView<StudentPersonalInfo> studentTable = new TableView<StudentPersonalInfo>();
+    private TableView<Student> studentTable = new TableView<Student>();
     private TableView<Enrollment> courseTable = new TableView<Enrollment>();
     private TableView<Course> allCourseTable = new TableView<Course>();
 
@@ -67,7 +67,7 @@ public class SpecificOperationView {
         instructions = new Label("\nPlease press buttons in order to see data.\nPlease select data from table.");
         viewStudentsButton = new Button("View students");
         viewStudentsButton.setOnAction(e -> SpecificOperationController.handleViewStudentsButtonEvent(studentTable));
-        groupLabel = new Label("Enter a new group ");
+        groupLabel = new Label("Enter a new group");
         groupField = new TextField();
         groupField.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -80,6 +80,7 @@ public class SpecificOperationView {
         });
         groupStudentButton = new Button("Set new group");
         groupStudentButton.setOnAction(e -> SpecificOperationController.handleGroupStudentButtonEvent(Integer.parseInt(groupField.getText()), studentTable.getSelectionModel().getSelectedItem().getId()));
+
         viewAllCoursesButton = new Button("View All Courses");
         viewAllCoursesButton.setOnAction(e -> SpecificOperationController.handleViewAllCoursesButtonEvent(allCourseTable));
         enrollStudentButton = new Button("Enroll student");
@@ -101,7 +102,7 @@ public class SpecificOperationView {
         bottomPane.setAlignment(Pos.CENTER);
         bottomPane.setPadding(new Insets(0, 10, 10, 10));
         generateRaport = new Button("Generate raport");
-        generateRaport.setOnAction(e -> SpecificOperationController.handleGenerateRaportButtonEvent());
+        generateRaport.setOnAction(e -> SpecificOperationController.handleGenerateRaportButtonEvent(studentTable));
         bottomPane.getChildren().addAll(generateRaport);
 
         layout.setTop(topPane);

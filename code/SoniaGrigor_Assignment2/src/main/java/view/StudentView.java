@@ -22,7 +22,7 @@ import model.persistence.entity.Course;
 import model.persistence.entity.Enrollment;
 import model.persistence.entity.Student;
 import model.persistence.my_utility.GuiceModule;
-import model.persistence.my_utility.Utility;
+import model.persistence.my_utility.UtilityAuthorization;
 
 import javax.inject.Inject;
 import java.sql.Date;
@@ -44,7 +44,7 @@ public class StudentView {
     private static Student student;
     Stage window;
     Scene sceneMain;
-    int idUser = Utility.getLoggedUser();
+    int idUser = UtilityAuthorization.getLoggedUser();
 
     private TextField nameField;
     private TextField usernameField;
@@ -155,7 +155,7 @@ public class StudentView {
 
     private void handleViewCoursesButtonEvent() {
         try {
-            List<Enrollment> myCourseList = courseService.getMyCourses(16);
+            List<Enrollment> myCourseList = courseService.getMyCourses(UtilityAuthorization.getLoggedUser());
             ObservableList<Enrollment> data = FXCollections.observableList(myCourseList);
 
             TableView<Enrollment> table = new TableView<>();

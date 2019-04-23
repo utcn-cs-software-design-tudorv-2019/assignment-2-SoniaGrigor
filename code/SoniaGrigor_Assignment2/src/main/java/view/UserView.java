@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import model.business.user.UserService;
 import model.persistence.entity.User;
 import model.persistence.my_utility.GuiceModule;
-import model.persistence.my_utility.Utility;
+import model.persistence.my_utility.UtilityAuthorization;
 
 import javax.inject.Inject;
 
@@ -29,7 +29,7 @@ public class UserView {
     Stage window;
     Scene sceneMain;
 
-    int idUser = Utility.getLoggedUser();
+    int idUser = UtilityAuthorization.getLoggedUser();
     private User user;
 
     private Button basicOperationButton;
